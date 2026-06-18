@@ -1,31 +1,34 @@
 /* =========================================================================
-   Cortex Desktop · 官网设计系统（design DNA）
-   视觉论点：暖纸感「思考工作台」× 深海生物荧光。米白纸张作为日间工作面，
-   品牌水母的蓝紫荧光作为「智能在思考」的发光时刻。冷暖对撞、安静而有生命感。
-   - 暖色 = 动作与品牌（陶土橙 clay，承自产品 UI）
+   Cortex Desktop · 官网设计系统（design DNA）· 深海荧光
+   视觉论点：深海生物荧光「思考工作台」。深蓝紫海底作为工作面，
+   品牌水母的蓝紫荧光是「智能在思考」的发光时刻；陶土橙作为动作/品牌强调。
+   - 暖色 = 动作与品牌（陶土橙 clay）
    - 荧光 = 氛围与智能（蓝紫 bioluminescent，承自品牌水母 logo）
-   所有区块组件只消费这里定义的 token / 工具类 / 动效，禁止另起体系。
+   全站恒为深色（无主题切换）。区块组件只消费这里的 token / 工具类 / 动效。
    ========================================================================= */
 
 :root {
-  /* —— 暖纸画布（承自 cortex-desktop.css 的 clay/paper 体系）—— */
-  --paper: #faf8f4;
-  --paper-raise: #ffffff;
-  --paper-sink: #f3f1ec;
-  --paper-chip: #efede8;
+  /* —— 深海画布（深蓝紫底，其上叠生物荧光径向光晕）—— */
+  --paper: #06080d;                          /* body 基色 */
+  --paper-raise: rgba(255, 255, 255, 0.045); /* 抬升面（卡片/输入框） */
+  --paper-raise2: rgba(255, 255, 255, 0.08); /* 更亮一档（激活态/高亮） */
+  --paper-sink: rgba(255, 255, 255, 0.022);  /* 下沉面（内嵌槽） */
+  --paper-chip: rgba(255, 255, 255, 0.06);
+  --paper-solid: #0c1019;                    /* 不透明深色面（FinalCTA 内层等） */
+  --glass-bg: rgba(16, 20, 30, 0.62);        /* 玻璃面：深色半透 */
 
-  --ink: #1a1916;
-  --ink-2: #5e5c56;
-  --ink-3: #8c897f;
+  --ink: #eef2f8;
+  --ink-2: #aab2c4;
+  --ink-3: #717b8f;
 
-  --line: #e6e4dd;
-  --line-soft: #efede7;
-  --line-strong: #d8d4cb;
+  --line: rgba(255, 255, 255, 0.09);
+  --line-soft: rgba(255, 255, 255, 0.06);
+  --line-strong: rgba(255, 255, 255, 0.17);
 
-  /* 品牌动作色：陶土橙 */
-  --clay: #c96442;
-  --clay-deep: #b04f30;
-  --clay-soft: #f3e7df;
+  /* 品牌动作色：陶土橙（深色下略提亮） */
+  --clay: #e3794f;
+  --clay-deep: #c96442;
+  --clay-soft: rgba(227, 121, 79, 0.16);
   --clay-ink: #ffffff;
 
   /* —— 生物荧光（承自蓝紫水母 logo）—— */
@@ -38,26 +41,28 @@
   --jelly-low: #9a6bff;
   --jelly-deep: #b46bff;
 
-  /* —— 状态色（diff / 审阅，亮暗各一套；脱离硬编码绿红）—— */
-  --ok: #1f8f5b;
-  --ok-soft: rgba(31, 143, 91, 0.12);
-  --danger: #c0453f;
-  --danger-soft: rgba(192, 69, 63, 0.12);
-  /* 蓝紫的「可读墨」变体：达 AA 正文对比用（如 mock 分支名） */
-  --violet-ink: #6d3fd4;
+  /* 点睛蓝（eyebrow / 高亮线），在深底上达到良好对比 */
+  --accent-ink: #9fb4ff;
+
+  /* —— 状态色（深色下提亮以保持对比）—— */
+  --ok: #4cc28a;
+  --ok-soft: rgba(76, 194, 138, 0.18);
+  --danger: #e0726b;
+  --danger-soft: rgba(224, 114, 107, 0.16);
+  --violet-ink: #cdb8ff;
 
   --grad-jelly: linear-gradient(165deg, #8fd2ff 0%, #6a8bff 42%, #9a6bff 78%, #b46bff 100%);
-  --grad-glow: radial-gradient(closest-side, rgba(91, 140, 255, 0.55), rgba(139, 92, 246, 0.22), transparent 76%);
-  --grad-aurora: radial-gradient(60% 80% at 70% 20%, rgba(91, 140, 255, 0.18), transparent 60%),
-    radial-gradient(50% 60% at 20% 30%, rgba(139, 92, 246, 0.14), transparent 60%);
-  --grad-text: linear-gradient(100deg, #6a8bff, #9a6bff 52%, #c084fc);
+  --grad-glow: radial-gradient(closest-side, rgba(91, 140, 255, 0.5), rgba(139, 92, 246, 0.22), transparent 76%);
+  --grad-aurora: radial-gradient(120% 90% at 78% -6%, rgba(91, 140, 255, 0.2), transparent 52%),
+    radial-gradient(90% 80% at 12% 8%, rgba(139, 92, 246, 0.16), transparent 55%);
+  --grad-text: linear-gradient(100deg, #8fd2ff, #9a6bff 50%, #c084fc);
 
-  /* —— 阴影：暖褐色调（rgba 20,18,12），非纯黑 —— */
-  --shadow-xs: 0 1px 2px rgba(20, 18, 12, 0.05);
-  --shadow-card: 0 1px 2px rgba(20, 18, 12, 0.05), 0 10px 28px -16px rgba(20, 18, 12, 0.14);
-  --shadow-raise: 0 4px 16px rgba(20, 18, 12, 0.1), 0 1px 3px rgba(20, 18, 12, 0.06);
-  --shadow-pop: 0 22px 60px -20px rgba(20, 18, 12, 0.24), 0 4px 14px rgba(20, 18, 12, 0.08);
-  --shadow-glow: 0 0 70px -12px rgba(91, 140, 255, 0.45);
+  /* —— 阴影：深色（近黑）—— */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 24px 60px -28px rgba(0, 0, 0, 0.8);
+  --shadow-raise: 0 8px 30px -16px rgba(0, 0, 0, 0.7);
+  --shadow-pop: 0 22px 60px -20px rgba(0, 0, 0, 0.7);
+  --shadow-glow: 0 0 80px -10px rgba(91, 140, 255, 0.6);
 
   /* —— 圆角 —— */
   --r-sm: 8px;
@@ -82,53 +87,15 @@
   --fs-sm: 0.875rem;
   --fs-eyebrow: 0.76rem;
 
-  /* —— 布局 —— */
-  --maxw: 1140px;
+  /* —— 布局（对齐设计稿：容器 1160 / gutter 18–40 / 段距 56–128）—— */
+  --maxw: 1160px;
   --maxw-narrow: 760px;
-  --gutter: clamp(20px, 5vw, 48px);
-  --section-y: clamp(68px, 9vw, 136px);
+  --gutter: clamp(18px, 5vw, 40px);
+  --section-y: clamp(56px, 9vw, 128px);
 
   /* —— 动效 —— */
   --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-
-  color-scheme: light;
-}
-
-[data-theme="dark"] {
-  --paper: #14130f;
-  --paper-raise: #1d1c17;
-  --paper-sink: #1a1915;
-  --paper-chip: #242217;
-
-  --ink: #f0ede4;
-  --ink-2: #b6b3aa;
-  --ink-3: #8a877f;
-
-  --line: #2e2c26;
-  --line-soft: #26241f;
-  --line-strong: #423f37;
-
-  --clay: #cf6a48;
-  --clay-deep: #b9522f;
-  --clay-soft: #3a2a22;
-
-  /* 状态色：暗色下提亮以保持对比 */
-  --ok: #4cc28a;
-  --ok-soft: rgba(76, 194, 138, 0.16);
-  --danger: #e0726b;
-  --danger-soft: rgba(224, 114, 107, 0.16);
-  --violet-ink: #b9a3f5;
-
-  --grad-glow: radial-gradient(closest-side, rgba(91, 140, 255, 0.7), rgba(139, 92, 246, 0.3), transparent 76%);
-  --grad-aurora: radial-gradient(60% 80% at 72% 16%, rgba(91, 140, 255, 0.26), transparent 62%),
-    radial-gradient(52% 62% at 18% 28%, rgba(139, 92, 246, 0.2), transparent 62%);
-
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
-  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 12px 30px -16px rgba(0, 0, 0, 0.6);
-  --shadow-raise: 0 6px 20px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.4);
-  --shadow-pop: 0 24px 64px -20px rgba(0, 0, 0, 0.7), 0 4px 14px rgba(0, 0, 0, 0.5);
-  --shadow-glow: 0 0 80px -10px rgba(91, 140, 255, 0.6);
 
   color-scheme: dark;
 }
@@ -157,7 +124,13 @@ html {
 body {
   margin: 0;
   min-height: 100%;
-  background: var(--paper);
+  /* 深海荧光底：蓝紫青三处径向光晕（集中于顶部 hero 区）+ 纵向深蓝渐变铺底 */
+  background:
+    radial-gradient(120% 90% at 78% -6%, rgba(91, 140, 255, 0.2), transparent 52%),
+    radial-gradient(90% 80% at 12% 8%, rgba(139, 92, 246, 0.16), transparent 55%),
+    radial-gradient(80% 60% at 50% 108%, rgba(54, 200, 220, 0.1), transparent 60%),
+    linear-gradient(180deg, #0a0d15 0%, #080a11 60%, #06080d 100%);
+  background-attachment: fixed;
   color: var(--ink);
   font-family: var(--font-sans);
   font-size: var(--fs-body);
@@ -166,7 +139,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
-  transition: background 0.4s var(--ease), color 0.4s var(--ease);
 }
 
 h1, h2, h3, h4, p, figure, blockquote {
@@ -192,8 +164,8 @@ button {
 }
 
 ::selection {
-  background: var(--clay-soft);
-  color: var(--clay-deep);
+  background: rgba(227, 121, 79, 0.3);
+  color: #fff;
 }
 
 :focus-visible {
@@ -285,13 +257,13 @@ button {
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--clay-deep);
+  color: var(--accent-ink);
 }
 .eyebrow::before {
   content: "";
   width: 22px;
   height: 1.5px;
-  background: linear-gradient(90deg, var(--clay), transparent);
+  background: linear-gradient(90deg, var(--glow-blue), transparent);
 }
 
 /* 荧光渐变文字（节制使用，仅用于点睛词） */
@@ -429,10 +401,10 @@ button {
   border-color: var(--line-strong);
 }
 .glass {
-  background: color-mix(in oklab, var(--paper-raise) 72%, transparent);
-  backdrop-filter: saturate(1.4) blur(14px);
-  -webkit-backdrop-filter: saturate(1.4) blur(14px);
-  border: 1px solid color-mix(in oklab, var(--line) 80%, transparent);
+  background: var(--glass-bg);
+  backdrop-filter: saturate(1.4) blur(16px);
+  -webkit-backdrop-filter: saturate(1.4) blur(16px);
+  border: 1px solid var(--line);
 }
 
 /* ===================== 生物荧光氛围 ===================== */
@@ -457,11 +429,11 @@ button {
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  background-image: radial-gradient(rgba(91, 140, 255, 0.5) 1px, transparent 1.4px);
-  background-size: 26px 26px;
-  -webkit-mask-image: radial-gradient(70% 60% at 50% 40%, #000, transparent 72%);
-  mask-image: radial-gradient(70% 60% at 50% 40%, #000, transparent 72%);
-  opacity: 0.5;
+  background-image: radial-gradient(rgba(120, 160, 255, 0.45) 1px, transparent 1.6px);
+  background-size: 30px 30px;
+  -webkit-mask-image: radial-gradient(75% 55% at 60% 18%, #000, transparent 72%);
+  mask-image: radial-gradient(75% 55% at 60% 18%, #000, transparent 72%);
+  opacity: 0.35;
 }
 .content {
   position: relative;
@@ -603,56 +575,9 @@ button {
   height: 14px;
 }
 
-/* —— 右栏 mock 用量卡 —— */
-.auto-usage {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(18px, 2.4vw, 26px);
-}
-.auto-usage-desc {
-  margin-top: 8px;
-  font-size: var(--fs-sm);
-}
-/* 7 列发光强度小格日历 */
-.auto-cal {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 6px;
-}
-.auto-cell {
-  aspect-ratio: 1 / 1;
-  border-radius: 4px;
-  /* 内描边稳住网格感，避免低不透明度格子糊成一团 */
-  box-shadow: inset 0 0 0 1px rgba(91, 140, 255, 0.08);
-}
-/* 两个统计：并排，大号 mono 数值 + 小标签 */
-.auto-stats {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-  padding-top: clamp(14px, 2vw, 20px);
-  border-top: 1px solid var(--line);
-}
-.auto-stat {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-.auto-stat-value {
-  font-size: clamp(1.7rem, 1.3rem + 1.4vw, 2.3rem);
-  font-weight: 650;
-  line-height: 1.05;
-  letter-spacing: -0.01em;
-  color: var(--ink);
-}
-.auto-stat-label {
-  font-size: var(--fs-sm);
-}
-
 /* 移动端（≤760px）：左栏要点上移、卡片自然撑满，列已由 .grid-2 在 ≤600 折叠为单列 */
 @media (max-width: 760px) {
-  .auto-desc,
-  .auto-usage-desc {
+  .auto-desc {
     max-width: none;
   }
 }
@@ -702,4 +627,130 @@ button {
 }
 .feat-desc {
   margin-top: 8px;
+}
+
+/* ===================== Automation 定时任务列表（Automation.tsx 右栏）=====================
+   设计稿深海版右栏由「用量日历」改为「定时任务」清单：表头 + 若干任务行，
+   每行左侧开关、中间名称/节奏、右侧状态徽标（运行中 / 下次 / 完成）。前缀 .task- 防冲突。 */
+.task-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--r-lg);
+  background: var(--paper-raise);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+.task-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line);
+}
+.task-head-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-weight: 650;
+  font-size: 0.95rem;
+}
+.task-head-title svg {
+  width: 18px;
+  height: 18px;
+  color: var(--accent-ink);
+}
+.task-count {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--ink-3);
+  background: var(--paper-sink);
+  border-radius: var(--r-pill);
+  padding: 2px 9px;
+}
+.task-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 16px;
+}
+.task-row + .task-row {
+  border-top: 1px solid var(--line);
+}
+/* 开关（恒为开态的静态展示） */
+.task-switch {
+  flex: none;
+  width: 30px;
+  height: 17px;
+  border-radius: var(--r-pill);
+  background: var(--clay);
+  position: relative;
+}
+.task-switch::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 15px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #fff;
+}
+.task-main {
+  flex: 1;
+  min-width: 0;
+}
+.task-name {
+  font-size: 0.88rem;
+  color: var(--ink);
+  font-weight: 550;
+}
+.task-sched {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--ink-3);
+  margin-top: 2px;
+}
+/* 状态徽标三态 */
+.task-status {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+.task-status--running {
+  color: var(--glow-blue);
+}
+.task-status--running .task-pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--glow-blue);
+  animation: taskPulse 2.4s var(--ease) infinite;
+}
+.task-status--done {
+  color: var(--ok);
+  background: var(--ok-soft);
+  border-radius: var(--r-pill);
+  padding: 3px 9px;
+}
+.task-status--done svg {
+  width: 12px;
+  height: 12px;
+}
+.task-status--next {
+  font-family: var(--font-mono);
+  color: var(--ink-3);
+}
+@keyframes taskPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(91, 140, 255, 0); }
+  50% { box-shadow: 0 0 0 5px rgba(91, 140, 255, 0.16); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .task-status--running .task-pulse {
+    animation: none;
+  }
 }

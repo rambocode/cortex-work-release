@@ -176,10 +176,10 @@ export default function TerminalShowcase({ d }: { d: Dict; locale: Locale }) {
           background: var(--paper-sink);
         }
 
-        /* 文件预览 */
+        /* 文件预览：真终端深色面（还原代码面板质感） */
         .tm-files {
-          background: var(--paper-raise);
-          border: 1px solid var(--line);
+          background: var(--paper-solid);
+          border: 1px solid var(--line-strong);
           border-radius: var(--r);
           box-shadow: var(--shadow-raise);
           overflow: hidden;

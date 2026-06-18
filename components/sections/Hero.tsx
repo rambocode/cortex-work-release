@@ -36,7 +36,7 @@ export default function Hero({ d, locale }: { d: Dict; locale: Locale }) {
                 中英文均自然换行 + balance，避免强制 <br/> 在英文下产生参差） */}
             <h1 className="display hero__title" style={{ textWrap: "balance" }}>
               {d.hero.title}
-              <span className="glow-text hero__accent">{d.hero.titleAccent}</span>
+              <span className="hero__accent">{d.hero.titleAccent}</span>
             </h1>
           </Reveal>
 
@@ -112,8 +112,16 @@ export default function Hero({ d, locale }: { d: Dict; locale: Locale }) {
           margin-top: 4px;
           font-size: clamp(2.3rem, 1.4rem + 3.4vw, 4rem);
         }
-        /* 荧光点睛词独占一行 */
-        .hero__accent { display: block; }
+        /* 荧光点睛词独占一行 + 流光（shimmer）渐变文字 */
+        .hero__accent {
+          display: block;
+          background: linear-gradient(100deg, #8fd2ff, #9a6bff 50%, #c084fc, #8fd2ff);
+          background-size: 200% auto;
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+          animation: shimmer 7s linear infinite;
+        }
         .hero__lead { max-width: 34em; }
 
         .hero__actions {
@@ -218,6 +226,7 @@ export default function Hero({ d, locale }: { d: Dict; locale: Locale }) {
         @media (prefers-reduced-motion: reduce) {
           .hero__art { animation: none; }
           .hero__demo { animation: none; }
+          .hero__accent { animation: none; }
         }
       `}</style>
     </section>

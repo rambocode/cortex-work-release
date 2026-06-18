@@ -16,7 +16,7 @@ import { useEffect, useState } from "react";
 
 import { BrandMark } from "@/components/brand";
 import { IconDownload } from "@/components/icons";
-import { LangSwitch, ThemeToggle } from "@/components/ui";
+import { LangSwitch } from "@/components/ui";
 import type { Dict } from "@/lib/dictionary";
 import type { Locale } from "@/lib/i18n";
 
@@ -86,7 +86,6 @@ export default function Nav({ d, locale }: { d: Dict; locale: Locale }) {
         {/* 右：语言 / 主题 / 主 CTA + 汉堡按钮 */}
         <div className="site-nav__actions">
           <LangSwitch locale={locale} />
-          <ThemeToggle />
           <Link className="btn btn--primary site-nav__cta" href={downloadHref}>
             <IconDownload />
             {d.nav.download}
@@ -158,7 +157,7 @@ export default function Nav({ d, locale }: { d: Dict; locale: Locale }) {
         .site-nav.is-scrolled .site-nav__bar {
           box-shadow: var(--shadow-raise);
           border-color: var(--line-strong);
-          background: color-mix(in oklab, var(--paper-raise) 86%, transparent);
+          background: rgba(12, 16, 24, 0.78);
         }
 
         .site-nav__brand {

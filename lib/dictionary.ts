@@ -135,11 +135,11 @@ export interface Dict {
     eyebrow: string;
     title: string;
     auto: { title: string; desc: string; bullets: string[] };
-    usage: {
+    /** 右栏「定时任务」清单：每条任务带节奏与三态状态（运行中 / 下次 / 完成） */
+    tasks: {
       title: string;
-      desc: string;
-      stat1: { value: string; label: string };
-      stat2: { value: string; label: string };
+      countNote: string;
+      items: { name: string; sched: string; status: "running" | "next" | "done"; statusLabel: string }[];
     };
   };
   finalCta: { title: string; sub: string; primary: string; secondary: string; note: string };
@@ -167,12 +167,12 @@ const zh: Dict = {
   nav: { skills: "Skills", accounting: "记账", notes: "闪记", terminal: "终端", features: "功能", agents: "Agent", github: "GitHub", download: "下载" },
   links: { github: GITHUB, releases: `${GITHUB}/releases`, webApp: "#" },
   hero: {
-    eyebrow: "本地优先的 Agent 工作台",
-    title: "写代码、记一笔账，",
-    titleAccent: "拖个 skill 就上手",
-    sub: "本地优先的桌面工作台：默认不膨胀，需要哪个 skill 就拖哪个进来，这一轮照它干。写代码、记灵感、记一笔账，都是同一套动作。",
-    primary: "下载桌面端",
-    secondary: "在浏览器试用",
+    eyebrow: "本地优先 · 桌面 Agent 工作台",
+    title: "把所有编码 Agent，",
+    titleAccent: "请进同一张工作台",
+    sub: "默认不膨胀——需要哪个 skill，就把它拖进来，这一轮就照它干。写代码、记灵感、记一笔账，都是同一套动作。",
+    primary: "下载 macOS 版",
+    secondary: "看看怎么用",
     trust: "已支持 Claude · Codex · Pi，可接入更多模型通道",
     note: "macOS · 自动更新",
   },
@@ -352,11 +352,15 @@ const zh: Dict = {
       desc: "把重复的活交给 cron 式任务：夜间跑测试、每天理 issue、定期生成报告。",
       bullets: ["每日 / 每周 / 自定义节奏", "失败自动重试与通知", "结果回流到时间线"],
     },
-    usage: {
-      title: "用量与节奏",
-      desc: "用量日历按天回看消耗，时间线串起每个项目的活动。",
-      stat1: { value: "42", label: "本周任务" },
-      stat2: { value: "7", label: "自动化运行" },
+    tasks: {
+      title: "定时任务",
+      countNote: "4 个 · 全部启用",
+      items: [
+        { name: "夜间跑测试", sched: "每日 02:00 · auth、payment", status: "running", statusLabel: "运行中" },
+        { name: "整理 issue 列表", sched: "每天 09:00 · 打标签 + 去重", status: "next", statusLabel: "下次 09:00" },
+        { name: "生成周报", sched: "每周一 10:00 · 回流时间线", status: "done", statusLabel: "完成" },
+        { name: "同步依赖与安全检查", sched: "每 6 小时", status: "next", statusLabel: "下次 14:00" },
+      ],
     },
   },
   finalCta: {
@@ -406,12 +410,12 @@ const en: Dict = {
   nav: { skills: "Skills", accounting: "Ledger", notes: "Notes", terminal: "Terminal", features: "Features", agents: "Agents", github: "GitHub", download: "Download" },
   links: { github: GITHUB, releases: `${GITHUB}/releases`, webApp: "#" },
   hero: {
-    eyebrow: "The local-first agent workspace",
-    title: "Write code, log an expense —",
-    titleAccent: "just drag in a skill",
-    sub: "A local-first desktop workspace. Context stays lean by default; drag in the skill you need and this turn runs on it. Coding, notes, bookkeeping — one gesture.",
+    eyebrow: "Local-first · desktop agent workbench",
+    title: "Every coding agent,",
+    titleAccent: "in one workbench",
+    sub: "No bloat by default — drag in the skill you need and this turn runs on it. Coding, notes, bookkeeping — one and the same gesture.",
     primary: "Download for macOS",
-    secondary: "Open the web app",
+    secondary: "See how it works",
     trust: "Works with Claude · Codex · Pi — and more model channels",
     note: "macOS · auto-updating",
   },
@@ -591,11 +595,15 @@ const en: Dict = {
       desc: "Hand repetitive work to cron-style tasks: nightly tests, daily issue triage, scheduled reports.",
       bullets: ["Daily, weekly or custom cadence", "Auto-retry and notify on failure", "Results flow back to the timeline"],
     },
-    usage: {
-      title: "Usage & rhythm",
-      desc: "A usage calendar replays daily spend; a timeline threads every project's activity.",
-      stat1: { value: "42", label: "tasks this week" },
-      stat2: { value: "7", label: "automations run" },
+    tasks: {
+      title: "Scheduled tasks",
+      countNote: "4 · all enabled",
+      items: [
+        { name: "Nightly tests", sched: "Daily 02:00 · auth, payment", status: "running", statusLabel: "Running" },
+        { name: "Triage issues", sched: "Daily 09:00 · label + dedupe", status: "next", statusLabel: "Next 09:00" },
+        { name: "Weekly report", sched: "Mon 10:00 · back to timeline", status: "done", statusLabel: "Done" },
+        { name: "Sync deps & security scan", sched: "Every 6 hours", status: "next", statusLabel: "Next 14:00" },
+      ],
     },
   },
   finalCta: {

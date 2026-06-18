@@ -41,7 +41,7 @@ export default function FinalCTA({ d }: { d: Dict; locale: Locale }) {
               className="content"
               style={{
                 position: "relative",
-                background: "var(--paper-raise)",
+                background: "var(--paper-solid)",
                 borderRadius: "calc(var(--r-xl) - 1px)",
                 padding: "clamp(40px, 6vw, 72px) clamp(22px, 5vw, 56px)",
                 display: "flex",

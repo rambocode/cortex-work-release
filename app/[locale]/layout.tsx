@@ -41,9 +41,6 @@ export async function generateMetadata({
   };
 }
 
-// 主题防闪烁：渲染前根据 localStorage / 系统偏好设定 data-theme。
-const themeBootstrap = `(function(){try{var k='cortex-theme';var t=localStorage.getItem(k);var dark=window.matchMedia('(prefers-color-scheme: dark)').matches;var theme=(t==='light'||t==='dark')?t:(dark?'dark':'light');document.documentElement.dataset.theme=theme;}catch(e){}})();`;
-
 export default async function LocaleLayout({
   children,
   params,
@@ -54,11 +51,9 @@ export default async function LocaleLayout({
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   const d = getDict(locale);
+  // 站点恒为深海荧光深色，无主题切换；深色由 globals.css 的 :root 直接提供。
   return (
-    <html lang={locale} suppressHydrationWarning>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeBootstrap }} />
-      </head>
+    <html lang={locale}>
       <body>
         {/* 跳到主内容：键盘聚焦时显形，跳过顶栏直达 <main id="main"> */}
         <a className="skip-link" href="#main">
