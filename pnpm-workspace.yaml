@@ -1,0 +1,11 @@
+# 独立部署用的最小 workspace：让 package.json 里的 catalog: 依赖能在本仓库解析。
+# 版本与 monorepo(../cortex-work)的 catalog 保持一致。
+packages: []
+
+catalog:
+  react: "19.2.3"
+  react-dom: "19.2.3"
+  "@types/react": "^19.2.0"
+  "@types/react-dom": "^19.2.0"
+  typescript: "^5.9.3"
+  "@types/node": "^25.0.10"
