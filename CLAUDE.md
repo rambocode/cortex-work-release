@@ -6,22 +6,24 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 本项目是 **Cortex Desktop 的官方宣传网站**。Cortex Desktop 是一款团队 Agent 桌面应用（Electron + Web），其代码仓库是同级目录 `../cortex-work`（monorepo）。本站的职责就是介绍该产品并引导下载（download/releases/web app 链接），落地页文案与 `../cortex-work` 的真实能力对齐。
 
-Next.js 16 (App Router) + React 19，纯静态营销页，**自身无后端、无数据库**。中英双语 (`/zh`、`/en`)，单页多区块叙事。
+Next.js 16 (App Router) + React 19，**静态导出**（`output:"export"`）的纯营销页，**无后端、无数据库**。中英双语 (`/zh`、`/en`)，单页多区块叙事。
 
-包名 `@cortex-work/site`，逻辑上是 `cortex-work` pnpm workspace 成员（依赖版本走 workspace `catalog:`，故 `react`/`typescript` 等不写死版本号；`cortex-work` 里有 `dev:site` / `build:site` turbo 过滤命令）。**结构注意**：workspace 声明了 `site` 成员，但物理上站点不在 `cortex-work/site`，而在其同级的本目录 `cortex-desktop/site`，自带 `node_modules`，可脱离 monorepo 独立运行。
+**这是一个独立部署仓库**，远程 `git@github.com:rambocode/cortex-work-release.git`，通过 GitHub Actions 构建并发布到 GitHub Pages（子路径 `https://rambocode.github.io/cortex-work-release/`）。该 release 仓库同时持有桌面应用的版本 tag（`v0.1.x`），站点源码与之合并在 `main` 上。
+
+依赖关系：包名 `@cortex-work/site`，源自 `cortex-work` monorepo（依赖版本走 `catalog:`，故 `react`/`typescript` 等不写死版本号）。为让本仓库能**脱离 monorepo 独立 `pnpm install`**，根目录自带一份最小 `pnpm-workspace.yaml` 来解析 `catalog:`（版本须与 `../cortex-work` 的 catalog 保持一致），并自带 `pnpm-lock.yaml`。
 
 ## 常用命令
 
 ```bash
-pnpm dev          # 开发服务器，默认端口 3100（可用 SITE_PORT 覆盖）
-pnpm build        # next build
-pnpm start        # 生产模式
+pnpm install      # 独立安装（本仓库自带 pnpm-workspace.yaml + lockfile，无需 monorepo）
+pnpm dev          # 开发服务器，默认端口 3100（可用 SITE_PORT 覆盖）；不设 basePath，走根路径
+pnpm build        # next build → 静态导出到 out/
 pnpm typecheck    # tsc --noEmit —— 提交前的主要验证手段
 ```
 
-- 在 monorepo 根从外部运行用 `pnpm --filter @cortex-work/site <script>`。
 - **没有测试框架、没有 lint 脚本**：`pnpm typecheck` + `pnpm build` 通过即视为绿。改完务必跑 typecheck。
 - 路径别名 `@/*` → 本目录根（`@/lib/...`、`@/components/...`）。
+- 复现线上构建（带子路径前缀）：`NEXT_BASE_PATH=/cortex-work-release NEXT_PUBLIC_SITE_URL=https://rambocode.github.io/cortex-work-release pnpm build`。
 
 ## 架构与约定（关键，先读这里）
 
@@ -51,9 +53,18 @@ pnpm typecheck    # tsc --noEmit —— 提交前的主要验证手段
 ### i18n / 路由机制
 
 - 路由 `app/[locale]/`，`generateStaticParams` 预生成 zh/en，`dynamicParams = false`（非法 locale → `notFound()`）。
-- `next.config.ts` 把 `/` 重定向到 `/zh`。
+- 根路径 `/` → `/zh` 的跳转由 `public/index.html`（meta refresh，相对 `./zh/`）承担。**注意**：`next.config.ts` 的 `redirects()` 在 `output:"export"` 下不生效，故不要改回用 redirects 做根跳转。
 - 主题（亮/暗）：`layout.tsx` 头部内联 `themeBootstrap` 脚本在渲染前读 `localStorage['cortex-theme']` + 系统偏好，设 `document.documentElement.dataset.theme`，避免闪烁；`ThemeToggle` 负责切换。暗色由 globals.css 的 `[data-theme="dark"]` 覆盖。
 - 部署域名走 `NEXT_PUBLIC_SITE_URL` 环境变量（layout 的 metadata 用）。
+
+## 部署（GitHub Pages，子路径）
+
+`.github/workflows/deploy.yml`：push 到 `main` → `pnpm install --no-frozen-lockfile` → `pnpm build` → 上传 `out/` → `deploy-pages`。仓库 Pages 源已设为 **GitHub Actions**。
+
+子路径部署的几个不可改约定（改错会导致线上资源 404 或样式丢失）：
+- `next.config.ts`：`output:"export"` + `basePath`/`assetPrefix` 经 `NEXT_BASE_PATH` 注入（CI 设为 `/cortex-work-release`；本地 dev 不设，走根路径）+ `trailingSlash:true`（每路由导出为 `目录/index.html`）+ `images.unoptimized:true`（导出无图片优化服务）。
+- `public/.nojekyll`：禁用 Jekyll，否则 Pages 会忽略 `_next/` 下划线目录 → 全站样式/脚本丢失。
+- `public/index.html`：根跳转页（见上）。
 
 ## 改动准则
 
