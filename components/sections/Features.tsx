@@ -1,47 +1,39 @@
-import { featureIcon } from "@/components/icons";
-import { Reveal } from "@/components/ui";
+/* =========================================================================
+   Features · 更多能力（server 组件）
+   bento 网格：前两格双宽打破均匀感，其余单宽。样式全部复用 globals.css
+   的 .bento 原语，本文件不写 scoped CSS。
+   ========================================================================= */
+
+import { Icon } from "@/components/icons";
 import type { Dict } from "@/lib/dictionary";
 import type { Locale } from "@/lib/i18n";
 
-/* =========================================================================
-   Features · 核心能力（id="features"）
-   server 组件：标题区 + 6 项轻卡（grid grid-3，移动折叠）。
-   每项是一组并列单元、hover 升起，故用轻卡 card card--pad card--hover。
-   图标放进小号荧光底圆，克制点缀、统一蓝紫氛围。
-   scoped 样式（.feat-*）按契约集中在 globals.css 末尾（server 组件不可用内联 <style>）。
-   ========================================================================= */
-
 export default function Features({ d }: { d: Dict; locale: Locale }) {
-  const { eyebrow, title, sub, items } = d.features;
-
   return (
-    <section id="features" className="section">
+    <section className="section" id="features" aria-labelledby="features-title">
       <div className="container">
-        {/* —— 标题区 —— */}
-        <Reveal className="content">
-          <header className="feat-head">
-            <span className="eyebrow">{eyebrow}</span>
-            <h2 className="h2">{title}</h2>
-            <p className="lead">{sub}</p>
-          </header>
-        </Reveal>
+        <div className="sec-head">
+          <span className="eyebrow">{d.features.eyebrow}</span>
+          <h2 className="h2" id="features-title">
+            {d.features.title}
+          </h2>
+          <p className="lead">{d.features.sub}</p>
+        </div>
 
-        {/* —— 6 项能力：grid grid-3（≤900 折两列、≤600 折单列，由 globals.css 处理）—— */}
-        <div className="grid grid-3 feat-grid">
-          {items.map((item, i) => {
-            const Icon = featureIcon[item.icon];
+        <div className="bento">
+          {d.features.items.map((f, i) => {
+            const Glyph = Icon[f.icon];
+            // 首尾各两格双宽：8 项时正好排成 2+4+2 三行且不留缺口
+            // （只出双宽会让末行剩两个空位）。改动条目数时留意这个假设。
+            const wide = i < 2 || i >= d.features.items.length - 2;
             return (
-              // 每张轻卡错峰入场；i 递增控制 stagger 延迟。
-              <Reveal key={item.icon} className="content" i={i}>
-                <article className="card card--pad card--hover feat-card">
-                  {/* 荧光底圆：图标线条走荧光蓝，统一「智能氛围」 */}
-                  <span className="feat-medallion" aria-hidden="true">
-                    <Icon />
-                  </span>
-                  <h3 className="h3 feat-title">{item.title}</h3>
-                  <p className="muted feat-desc">{item.desc}</p>
-                </article>
-              </Reveal>
+              <article className={`bento__cell ${wide ? "bento__cell--wide" : ""}`} key={f.title}>
+                <span className="bento__ico" aria-hidden>
+                  <Glyph />
+                </span>
+                <h3 className="bento__title">{f.title}</h3>
+                <p className="bento__desc">{f.desc}</p>
+              </article>
             );
           })}
         </div>

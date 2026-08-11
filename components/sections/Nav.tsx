@@ -3,8 +3,8 @@
 /* =========================================================================
    Nav · 顶部导航（sticky glass 顶栏）
    - 左：品牌标 BrandMark
-   - 中：锚点链接（功能 / 工作流 / Agent 生态）→ /${locale}#features|#workflow|#agents
-   - 右：语言开关 + 主题切换 + 主 CTA「下载」
+   - 中：锚点链接（能做什么 / 语音 / 工作台 / 产出 / 自动化 / 模型）
+   - 右：语言开关 + 主 CTA「下载」
    滚动超过阈值给顶栏加阴影与更实的背景（scrolled 态）。
    移动端（<=760px）中部锚点收进汉堡菜单：useState 控制展开，
    带可见 focus 与 aria-expanded，菜单项点击后自动收起。
@@ -27,13 +27,15 @@ export default function Nav({ d, locale }: { d: Dict; locale: Locale }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   // 中部锚点链接（文案全部取自 d.nav，href 带 locale 前缀保证语言不丢）。
+  // 页面共 12 个锚点，顶栏只放 6 个主干；其余（子代理 / 动手 / 随手接住 /
+  // 更多能力）在页脚有全量入口，避免顶栏在中等宽度下挤成两行。
   const anchors = [
-    { label: d.nav.skills, href: `/${locale}#skills` },
-    { label: d.nav.accounting, href: `/${locale}#accounting` },
-    { label: d.nav.notes, href: `/${locale}#notes` },
-    { label: d.nav.terminal, href: `/${locale}#terminal` },
-    { label: d.nav.features, href: `/${locale}#features` },
-    { label: d.nav.agents, href: `/${locale}#agents` },
+    { label: d.nav.scenes, href: `/${locale}#scenes` },
+    { label: d.nav.voice, href: `/${locale}#voice` },
+    { label: d.nav.workspace, href: `/${locale}#workspace` },
+    { label: d.nav.make, href: `/${locale}#make` },
+    { label: d.nav.automation, href: `/${locale}#automation` },
+    { label: d.nav.models, href: `/${locale}#models` },
   ];
   const downloadHref = `/${locale}#download`;
 

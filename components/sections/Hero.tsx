@@ -1,94 +1,100 @@
 /* =========================================================================
    Hero · 首屏主视觉（server 组件，动效全部交给 CSS）
-   结构：氛围层（aurora + neuron-field，z-index:0）→ .content 两列：
-   左文案（eyebrow / display 标题 + glow-text 点睛 / lead / 两个 CTA /
-   trust 小字 + note pill），右主视觉（发光水母 Jellyfish + halo 光晕）。
-   - 桌面左文右图，移动端单列、文在上、水母在下并弱化。
-   - 文案用 <Reveal> 包裹、靠 i 递增做错峰入场。
-   - 自定义布局/动效写在文件内 scoped <style>，并在 reduced-motion 下静默。
+   结构：氛围层（aurora + neuron-field）→ 上半两列（左文案 / 右品牌水母）
+   → 下半通栏大图（SHOT-01 主窗口截图，压在水母光晕之上）。
+   改版要点：首屏的主角从「模拟演示卡」换成真实产品截图，水母退为品牌光源。
    - 一切可见文案来自 d（Dict），不硬编码中英文。
+   - 自定义入场动效在本文件 scoped <style> 内，并在 reduced-motion 下静默。
    ========================================================================= */
 
-import { IconArrowRight, IconDownload } from "@/components/icons";
+import { IconArrowRight, IconDownload, IconCheck } from "@/components/icons";
 import Jellyfish from "@/components/Jellyfish";
-import HeroDemo from "@/components/HeroDemo";
+import Shot from "@/components/Shot";
 import { Reveal } from "@/components/ui";
 import type { Dict } from "@/lib/dictionary";
 import type { Locale } from "@/lib/i18n";
 
-export default function Hero({ d, locale }: { d: Dict; locale: Locale }) {
+export default function Hero({ d }: { d: Dict; locale: Locale }) {
   return (
     <section className="section hero">
       {/* —— 底层氛围：极光 + 神经元星点，绝对定位铺底（z-index:0）—— */}
       <div className="aurora" aria-hidden="true" />
       <div className="neuron-field hero__field" aria-hidden="true" />
 
-      {/* —— 内容层：两列网格（.content 自带 z-index:1）—— */}
-      <div className="container content hero__grid">
-        {/* 左列：文案与 CTA */}
-        <div className="hero__copy">
-          <Reveal i={0}>
-            <span className="eyebrow">{d.hero.eyebrow}</span>
-          </Reveal>
+      <div className="container content">
+        {/* —— 上半：左文案 / 右品牌水母 —— */}
+        <div className="hero__grid">
+          <div className="hero__copy">
+            <Reveal i={0}>
+              <span className="eyebrow">{d.hero.eyebrow}</span>
+            </Reveal>
 
-          <Reveal i={1}>
-            {/* 标题两行：主句 + 荧光点睛词（点睛词块级独占一行，
-                中英文均自然换行 + balance，避免强制 <br/> 在英文下产生参差） */}
-            <h1 className="display hero__title" style={{ textWrap: "balance" }}>
-              {d.hero.title}
-              <span className="hero__accent">{d.hero.titleAccent}</span>
-            </h1>
-          </Reveal>
+            <Reveal i={1}>
+              {/* 标题两行：主句 + 荧光点睛词（点睛词块级独占一行，
+                  中英文均自然换行 + balance，避免强制 <br/> 在英文下产生参差） */}
+              <h1 className="display hero__title" style={{ textWrap: "balance" }}>
+                {d.hero.title}
+                <span className="hero__accent">{d.hero.titleAccent}</span>
+              </h1>
+            </Reveal>
 
-          <Reveal i={2}>
-            <p className="lead hero__lead" style={{ textWrap: "balance" }}>
-              {d.hero.sub}
-            </p>
-          </Reveal>
+            <Reveal i={2}>
+              <p className="lead hero__lead">{d.hero.sub}</p>
+            </Reveal>
 
-          <Reveal i={3}>
-            <div className="hero__actions">
-              {/* 主 CTA：下载（动作 = 陶土橙） */}
-              <a className="btn btn--primary btn--lg" href="#download">
-                <IconDownload />
-                {d.hero.primary}
-              </a>
-              {/* 次 CTA：浏览器试用 */}
-              <a className="btn btn--ghost btn--lg" href={d.links.webApp}>
-                {d.hero.secondary}
-                <IconArrowRight />
-              </a>
-            </div>
-          </Reveal>
+            <Reveal i={3}>
+              <div className="hero__actions">
+                {/* 主 CTA：下载（动作 = 陶土橙） */}
+                <a className="btn btn--primary btn--lg" href="#download">
+                  <IconDownload />
+                  {d.hero.primary}
+                </a>
+                {/* 次 CTA：往下看能力总览（原「Web 版」入口已下线，不留死链） */}
+                <a className="btn btn--ghost btn--lg" href="#scenes">
+                  {d.hero.secondary}
+                  <IconArrowRight />
+                </a>
+              </div>
+            </Reveal>
 
-          <Reveal i={4}>
-            <div className="hero__trust">
-              <span className="muted">{d.hero.trust}</span>
-              <span className="pill">{d.hero.note}</span>
-            </div>
-          </Reveal>
+            <Reveal i={4}>
+              <ul className="hero__trust">
+                {d.hero.trust.map((t) => (
+                  <li key={t}>
+                    <IconCheck aria-hidden />
+                    {t}
+                  </li>
+                ))}
+              </ul>
+            </Reveal>
+          </div>
+
+          {/* 右列：品牌水母 + 呼吸光晕。纯氛围，不拦截交互。 */}
+          <div className="hero__art" aria-hidden="true">
+            <span className="halo anim-halo hero__halo" />
+            <Jellyfish className="anim-drift hero__jelly" />
+          </div>
         </div>
 
-        {/* 右列：发光水母主视觉(品牌锚,在后发光供能) + 前置交互式演示卡。
-            演示卡是真交互:拖/点切换 skill → 输入 → 回车模拟 Agent 输出,
-            直观表达「拖个 skill,任意任务都能交给 Agent」。 */}
-        <div className="hero__art">
-          {/* halo 呼吸光晕；水母随水流缓慢漂浮(均为氛围,置于卡后) */}
-          <span className="halo anim-halo hero__halo" aria-hidden="true" />
-          <Jellyfish className="anim-drift hero__jelly" />
-
-          {/* 交互式演示卡 */}
-          <div className="hero__demo">
-            <HeroDemo d={d} locale={locale} />
-          </div>
+        {/* —— 下半：通栏主截图。首屏 LCP，关掉懒加载。 —— */}
+        <div className="hero__stage">
+          <span className="halo hero__stage-halo" aria-hidden="true" />
+          <Shot
+            code="01-workspace"
+            alt={d.hero.shotAlt}
+            pending={d.a11y.shotPending}
+            className="hero__shot"
+            priority
+          />
+          <p className="hero__note muted">{d.hero.note}</p>
         </div>
       </div>
 
-      {/* —— scoped 布局 / 入场样式：仅作用于本区块，reduced-motion 下静默 —— */}
       <style>{`
         .hero {
           /* 首屏给足上方留白，避免被 sticky 顶栏遮挡 */
-          padding-top: clamp(84px, 12vw, 168px);
+          padding-top: clamp(84px, 12vw, 156px);
+          padding-bottom: clamp(40px, 6vw, 88px);
           overflow: hidden;
         }
         /* 收一点神经元星点的不透明度，作底纹而非主体 */
@@ -96,18 +102,18 @@ export default function Hero({ d, locale }: { d: Dict; locale: Locale }) {
 
         .hero__grid {
           display: grid;
-          grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+          grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
           align-items: center;
-          gap: clamp(28px, 5vw, 72px);
+          gap: clamp(28px, 5vw, 64px);
         }
 
         .hero__copy {
           display: flex;
           flex-direction: column;
           align-items: flex-start;
-          gap: clamp(18px, 2.4vw, 26px);
+          gap: clamp(16px, 2.2vw, 24px);
         }
-        /* 比全局 .display 略收一档：避免英文长标题在桌面下排成四行 / 首词落单 */
+        /* 比全局 .display 略收一档：避免英文长标题在桌面下排成四行 */
         .hero__title {
           margin-top: 4px;
           font-size: clamp(2.3rem, 1.4rem + 3.4vw, 4rem);
@@ -122,7 +128,7 @@ export default function Hero({ d, locale }: { d: Dict; locale: Locale }) {
           color: transparent;
           animation: shimmer 7s linear infinite;
         }
-        .hero__lead { max-width: 34em; }
+        .hero__lead { max-width: 36em; }
 
         .hero__actions {
           display: flex;
@@ -132,20 +138,33 @@ export default function Hero({ d, locale }: { d: Dict; locale: Locale }) {
 
         .hero__trust {
           display: flex;
-          align-items: center;
           flex-wrap: wrap;
-          gap: 10px 14px;
+          gap: 8px 22px;
+          margin: 2px 0 0;
+          padding: 0;
+          list-style: none;
           font-size: var(--fs-sm);
+          color: var(--ink-2);
+        }
+        .hero__trust li {
+          display: inline-flex;
+          align-items: center;
+          gap: 7px;
+        }
+        .hero__trust svg {
+          width: 15px;
+          height: 15px;
+          color: var(--glow-cyan);
         }
 
-        /* 右列主视觉：让水母与光晕居中叠放。
-           一次性入场淡入（页面加载即触发，非滚动），保证首屏强锚无空白闪烁。 */
+        /* 右列主视觉：水母与光晕居中叠放，一次性入场淡入（非滚动触发）。 */
         .hero__art {
           position: relative;
           display: flex;
           align-items: center;
           justify-content: center;
-          min-height: clamp(360px, 44vw, 540px);
+          min-height: clamp(260px, 30vw, 400px);
+          pointer-events: none;
           animation: heroArtIn 0.9s var(--ease-out) both;
         }
         @keyframes heroArtIn {
@@ -155,77 +174,71 @@ export default function Hero({ d, locale }: { d: Dict; locale: Locale }) {
         .hero__jelly {
           position: relative;
           z-index: 1;
-          width: clamp(280px, 34vw, 440px);
+          width: clamp(240px, 28vw, 380px);
           height: auto;
-          /* 水母是卡后氛围:不拦截卡片的拖/点/输入,略降存在感 */
-          pointer-events: none;
-          opacity: 0.94;
+          opacity: 0.95;
         }
-        /* 光晕落在水母之后、向四周柔和扩散 */
         .hero__halo {
-          width: clamp(360px, 46vw, 560px);
-          height: clamp(360px, 46vw, 560px);
+          width: clamp(320px, 40vw, 500px);
+          height: clamp(320px, 40vw, 500px);
           z-index: 0;
         }
 
-        /* —— 交互式演示卡:底部锚定,压在水母触手上;伞盖在上方完整露出 ——
-           (居中会盖住伞盖头部;改为贴底,默认态露出水母主体) */
-        .hero__demo {
-          position: absolute;
-          z-index: 2;
-          left: 50%;
-          bottom: clamp(0px, 2vw, 20px);
-          transform: translateX(-50%);
-          width: clamp(300px, 33vw, 384px);
-          animation: heroDemoIn 0.9s var(--ease-out) 0.25s both;
+        /* —— 通栏主截图舞台 —— */
+        .hero__stage {
+          position: relative;
+          margin-top: clamp(34px, 5vw, 70px);
+          animation: heroStageIn 1s var(--ease-out) 0.2s both;
         }
-        @keyframes heroDemoIn {
-          from { opacity: 0; transform: translate(-50%, 14px); }
-          to   { opacity: 1; transform: translate(-50%, 0); }
+        @keyframes heroStageIn {
+          from { opacity: 0; transform: translateY(22px); }
+          to   { opacity: 1; transform: none; }
+        }
+        /* 截图背后的大范围冷光，把图从深色背景里托起来 */
+        .hero__stage-halo {
+          top: 8%;
+          left: 50%;
+          transform: translateX(-50%);
+          width: min(96%, 1000px);
+          height: 62%;
+          filter: blur(46px);
+          opacity: 0.7;
+        }
+        .hero__shot { position: relative; z-index: 1; }
+        .hero__note {
+          position: relative;
+          z-index: 1;
+          margin-top: 16px;
+          text-align: center;
+          font-size: var(--fs-sm);
+          color: var(--ink-3);
         }
 
-        /* —— 移动端（≤760px）：单列、文在上、水母在下并弱化 —— */
-        @media (max-width: 760px) {
+        /* —— 移动端（≤860px）：单列。文案必须排在水母前面——把水母提到最上面
+           会让首屏只剩一只水母，用户得滚动才知道这是什么产品。 —— */
+        @media (max-width: 860px) {
           .hero__grid {
             grid-template-columns: 1fr;
-            gap: clamp(24px, 7vw, 40px);
+            gap: clamp(18px, 5vw, 30px);
           }
-          .hero__copy { align-items: flex-start; }
-          .hero__actions { width: 100%; }
-          /* 移动端:卡片进入正常流(定义高度),水母绝对定位、淡出于卡后 */
           .hero__art {
-            order: 2;
             min-height: auto;
-            display: block;
-            position: relative;
+            padding-block: 10px;
           }
-          .hero__jelly {
-            position: absolute;
-            top: -8px; left: 50%;
-            transform: translateX(-50%);
-            width: clamp(220px, 60vw, 300px);
-            opacity: 0.5;
-          }
+          .hero__jelly { width: clamp(150px, 38vw, 210px); opacity: 0.82; }
           .hero__halo {
-            width: clamp(280px, 78vw, 380px);
-            height: clamp(280px, 78vw, 380px);
-            top: 0; left: 50%; transform: translateX(-50%);
+            width: clamp(200px, 52vw, 290px);
+            height: clamp(200px, 52vw, 290px);
           }
-          .hero__demo {
-            position: relative;
-            top: auto; left: auto;
-            transform: none;
-            margin: clamp(48px, 16vw, 96px) auto 0;
-            width: 100%; max-width: 380px;
-            animation: none;
-          }
+          .hero__actions { width: 100%; }
+          .hero__stage { margin-top: clamp(22px, 6vw, 40px); }
         }
 
-        /* .anim-drift / .anim-halo / .reveal 已由 globals.css 的 reduced-motion
-           媒体查询静默；本区块新增的 heroArtIn 一次性入场需在此单独屏蔽。 */
+        /* globals.css 的 reduced-motion 只静默了 .anim-* 与 .reveal，
+           本区块新增的一次性入场与流光需要单独屏蔽。 */
         @media (prefers-reduced-motion: reduce) {
-          .hero__art { animation: none; }
-          .hero__demo { animation: none; }
+          .hero__art,
+          .hero__stage,
           .hero__accent { animation: none; }
         }
       `}</style>

@@ -18,6 +18,10 @@ const nextConfig: NextConfig = {
   assetPrefix: basePath || undefined,
   trailingSlash: true,
   images: { unoptimized: true },
+  // basePath 不会改写手写的 <img src="/shots/…">，产品截图必须自己拼前缀。
+  // 这里把同一个值以 NEXT_PUBLIC_ 暴露出去（构建期内联），供 lib/asset.ts 在
+  // server 与 client 组件里统一使用。
+  env: { NEXT_PUBLIC_BASE_PATH: basePath },
 };
 
 export default nextConfig;

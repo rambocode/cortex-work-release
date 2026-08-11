@@ -72,7 +72,8 @@ export default function Footer({ d, locale }: { d: Dict; locale: Locale }) {
       <style>{`
         .ftr-body {
           display: grid;
-          grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+          /* 右侧现在是三组链接，给它比品牌区更多的宽度 */
+          grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
           gap: clamp(32px, 5vw, 72px);
           align-items: start;
         }
@@ -129,8 +130,9 @@ export default function Footer({ d, locale }: { d: Dict; locale: Locale }) {
           font-size: var(--fs-sm);
           transition: color 0.2s var(--ease);
         }
+        /* 深底上 hover 要提亮：--clay-deep 比正文还暗，会显得像禁用态 */
         .ftr-link:hover {
-          color: var(--clay-deep);
+          color: var(--clay);
         }
 
         .ftr-bottom {

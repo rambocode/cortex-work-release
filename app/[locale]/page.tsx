@@ -3,25 +3,32 @@ import { getDict } from "@/lib/dictionary";
 
 import Nav from "@/components/sections/Nav";
 import Hero from "@/components/sections/Hero";
-import Agents from "@/components/sections/Agents";
-import SkillShowcase from "@/components/sections/SkillShowcase";
-import AccountingShowcase from "@/components/sections/AccountingShowcase";
-import NotesShowcase from "@/components/sections/NotesShowcase";
-import TerminalShowcase from "@/components/sections/TerminalShowcase";
-import Features from "@/components/sections/Features";
+import Scenes from "@/components/sections/Scenes";
+import Voice from "@/components/sections/Voice";
+import Workspace from "@/components/sections/Workspace";
+import Deliverables from "@/components/sections/Deliverables";
+import Squad from "@/components/sections/Squad";
+import Hands from "@/components/sections/Hands";
 import Automation from "@/components/sections/Automation";
-import FinalCTA from "@/components/sections/FinalCTA";
+import Capture from "@/components/sections/Capture";
+import Models from "@/components/sections/Models";
+import Features from "@/components/sections/Features";
+import Privacy from "@/components/sections/Privacy";
+import Download from "@/components/sections/Download";
 import Footer from "@/components/sections/Footer";
 import { Reveal } from "@/components/ui";
 
 /* =========================================================================
    落地页装配（async server 组件）
-   叙事：Hero 总承诺(双主线:写代码 / 记一笔账,拖 skill 按需注入)
-   → Skills(拖动 skill·省 token,核心机制) → 会计录入(拖入 skill 示例)
-   → 闪记(随手接住灵感) → 终端(文件/代码点击即引用进 Agent 输入框)
-   → Agents(任意 Agent) → Features(能力广度) → Automation(无人值守) → FinalCTA。
+   叙事：Hero 总承诺（会听 / 会说 / 会动手的本地 AI 工作站）
+   → Scenes 能做什么（App 自己的场景入口，最快建立「它能干活」的印象）
+   → Voice 语音（最新最重的差异化）→ Workspace 过程可见
+   → Deliverables 产出成品 → Squad 子代理编队 → Hands 动手（含确认红线）
+   → Automation 无人值守 → Capture 随手接住 → Models 自带模型
+   → Features 其余能力 → Privacy 本地优先 → Download。
    - Hero 首屏直接显示；其余区块用 <Reveal> 进入视口揭示。
-   - 锚点 id 全站唯一：skills / accounting / notes / terminal / agents / features / download。
+   - 锚点 id 全站唯一：scenes / voice / workspace / make / squad / hands /
+     automation / capture / models / features / download。
    ========================================================================= */
 export default async function LandingPage({
   params,
@@ -40,28 +47,40 @@ export default async function LandingPage({
         <Hero d={d} locale={loc} />
 
         <Reveal>
-          <SkillShowcase d={d} locale={loc} />
+          <Scenes d={d} locale={loc} />
         </Reveal>
         <Reveal>
-          <AccountingShowcase d={d} locale={loc} />
+          <Voice d={d} locale={loc} />
         </Reveal>
         <Reveal>
-          <NotesShowcase d={d} locale={loc} />
+          <Workspace d={d} locale={loc} />
         </Reveal>
         <Reveal>
-          <TerminalShowcase d={d} locale={loc} />
+          <Deliverables d={d} locale={loc} />
         </Reveal>
         <Reveal>
-          <Agents d={d} locale={loc} />
+          <Squad d={d} locale={loc} />
         </Reveal>
         <Reveal>
-          <Features d={d} locale={loc} />
+          <Hands d={d} locale={loc} />
         </Reveal>
         <Reveal>
           <Automation d={d} locale={loc} />
         </Reveal>
         <Reveal>
-          <FinalCTA d={d} locale={loc} />
+          <Capture d={d} locale={loc} />
+        </Reveal>
+        <Reveal>
+          <Models d={d} locale={loc} />
+        </Reveal>
+        <Reveal>
+          <Features d={d} locale={loc} />
+        </Reveal>
+        <Reveal>
+          <Privacy d={d} locale={loc} />
+        </Reveal>
+        <Reveal>
+          <Download d={d} locale={loc} />
         </Reveal>
       </main>
       <Footer d={d} locale={loc} />

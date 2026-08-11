@@ -1,7 +1,8 @@
 /* =========================================================================
    Open Graph 图（1200×630）
-   设计：暖纸底 × 蓝紫生物荧光。左侧大标题「Cortex Desktop」+ 英文标语，
+   设计：深海底 × 蓝紫生物荧光。左侧大标题「Cortex Desktop」+ 英文标语，
    右上角一抹蓝紫径向光晕 + 简化水母剪影 + 几颗发光点（神经元意象）。
+   配色与 globals.css 的深色 token 对齐（站点恒为深色，OG 图不能再是暖纸浅色）。
 
    关键约束：零外部字体 / 零网络请求。
    next/og（@vercel/og）离线只内置 Latin 字体（Geist），不含中文字形。
@@ -27,10 +28,10 @@ export function generateStaticParams() {
 export const alt = getDict("en").meta.ogAlt;
 
 // 设计 token 取值（OG 渲染环境读不到 CSS 变量，与 globals.css 对齐后内联）
-const PAPER = "#faf8f4"; // 暖纸底
-const INK = "#1a1916"; // 深墨标题
-const INK_2 = "#5e5c56"; // 次级文字
-const CLAY = "#c96442"; // 品牌动作色
+const PAPER = "#06080d"; // 深海底
+const INK = "#eef2f8"; // 亮色标题
+const INK_2 = "#aab2c4"; // 次级文字
+const CLAY = "#e3794f"; // 品牌动作色（深底下用提亮的那档）
 const GLOW_BLUE = "#5b8cff";
 const GLOW_VIOLET = "#8b5cf6";
 const GLOW_CYAN = "#36c8dc";
@@ -39,8 +40,8 @@ export default async function OpenGraphImage() {
   // 一切可见文案来自 dict（拉丁内容用 en 切片）。
   const en = getDict("en");
   const brandName = en.brand.name; // "Cortex Desktop"
-  const tagline = en.footer.tagline; // "One workspace for every coding agent."
-  const eyebrow = en.brand.tagline; // "The team agent workspace"
+  const tagline = en.footer.tagline; // "A local AI workstation that listens, speaks, and acts."
+  const eyebrow = en.brand.tagline; // "Local AI workstation"
 
   return new ImageResponse(
     (
@@ -53,8 +54,8 @@ export default async function OpenGraphImage() {
           justifyContent: "center",
           position: "relative",
           backgroundColor: PAPER,
-          // 极轻暖纸纵向过渡，避免大色块死板
-          backgroundImage: "linear-gradient(160deg, #fdfbf7 0%, #faf8f4 55%, #f5f2ec 100%)",
+          // 深海纵向过渡，与 body 的深蓝渐变同一套取值
+          backgroundImage: "linear-gradient(160deg, #0a0d15 0%, #080a11 58%, #06080d 100%)",
           padding: "84px 96px",
           overflow: "hidden",
           fontFamily: "sans-serif",
@@ -70,7 +71,7 @@ export default async function OpenGraphImage() {
             height: 760,
             borderRadius: "50%",
             background:
-              "radial-gradient(closest-side, rgba(91,140,255,0.42), rgba(139,92,246,0.20) 52%, rgba(139,92,246,0) 78%)",
+              "radial-gradient(closest-side, rgba(91,140,255,0.55), rgba(139,92,246,0.28) 52%, rgba(139,92,246,0) 78%)",
           }}
         />
         {/* 第二层更内聚的青蓝光核，制造体积感 */}

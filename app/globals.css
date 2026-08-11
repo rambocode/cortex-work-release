@@ -518,239 +518,699 @@ button {
   .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
 }
 
-/* ===================== Automation 区块（由 components/sections/Automation.tsx 使用）=====================
-   server 组件无法用内联 <style>，按契约把其 scoped 样式集中在此。命名前缀 .auto- 避免冲突。 */
-.auto-head {
+/* =========================================================================
+   共享区块原语（server 组件不能用内联 <style>，跨区块复用的样式一律收在这里）
+   命名沿用 BEM-ish 前缀，组件内只在确实一次性的地方才写 scoped <style>。
+   ========================================================================= */
+
+/* ===================== 区块头（eyebrow / h2 / lead 三件套）===================== */
+.sec-head {
   max-width: var(--maxw-narrow);
 }
-.auto-head .h2 {
+.sec-head .h2 {
+  margin-top: 14px;
+  text-wrap: balance;
+}
+.sec-head .lead {
   margin-top: 14px;
 }
-/* 两列：标题区与卡片间留白，列间距略放大 */
-.auto-grid {
-  margin-top: clamp(36px, 5vw, 60px);
-  gap: clamp(28px, 4vw, 56px);
-  align-items: start;
+.sec-head--center {
+  margin-inline: auto;
+  text-align: center;
 }
-/* 左栏在桌面端纵向居中于卡片，移动端自然顶对齐 */
-.auto-col {
-  min-width: 0;
-}
-.auto-desc {
-  margin-top: 12px;
-  max-width: 46ch;
-}
-/* 要点列表：荧光勾 + 文案 */
-.auto-bullets {
-  margin: 22px 0 0;
-  padding: 0;
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-.auto-bullets li {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  font-size: var(--fs-body);
-  color: var(--ink);
-}
-/* 荧光勾：放在小号渐变底圆里，勾本身用白色（在渐变上更亮） */
-.auto-check {
-  flex: none;
-  display: inline-flex;
-  align-items: center;
+.sec-head--center .eyebrow {
   justify-content: center;
-  width: 24px;
-  height: 24px;
-  margin-top: 1px;
-  border-radius: var(--r-pill);
-  background: var(--grad-jelly);
-  box-shadow: 0 0 0 3px rgba(91, 140, 255, 0.14);
-  color: #fff;
-}
-.auto-check svg {
-  width: 14px;
-  height: 14px;
 }
 
-/* 移动端（≤760px）：左栏要点上移、卡片自然撑满，列已由 .grid-2 在 ≤600 折叠为单列 */
-@media (max-width: 760px) {
-  .auto-desc {
-    max-width: none;
+/* ===================== 要点列表（原先在 5 个组件里各写了一遍的荧光勾点）===================== */
+.pointlist {
+  display: grid;
+  gap: clamp(18px, 2vw, 26px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pointlist--2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.pointlist__item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  align-items: start;
+}
+/* 图标底座：荧光渐变描边 + 内层深色面，与 .pill--glow 同一套语言。
+   内层必须是不透明深色——用半透明的 --paper-raise 会让 border-box 的渐变透上来，
+   整块变成实心渐变片，线性图标直接糊掉看不清。 */
+.pointlist__ico {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex: none;
+  border-radius: 11px;
+  color: var(--jelly-top);
+  background: linear-gradient(160deg, #141a28, #0d1119) padding-box,
+    var(--grad-jelly) border-box;
+  border: 1px solid transparent;
+  box-shadow: 0 0 22px -10px rgba(91, 140, 255, 0.8);
+}
+.pointlist__ico svg {
+  width: 19px;
+  height: 19px;
+}
+.pointlist__title {
+  font-size: 1.02rem;
+  font-weight: 650;
+  line-height: 1.4;
+  letter-spacing: -0.008em;
+}
+.pointlist__desc {
+  margin-top: 5px;
+  color: var(--ink-2);
+  font-size: 0.94rem;
+  line-height: 1.62;
+}
+
+/* 纯文本勾点（产出物 tab 里的三条支撑句，无图标底座） */
+.checklist {
+  display: grid;
+  gap: 11px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.checklist li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+  align-items: start;
+  color: var(--ink-2);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+.checklist svg {
+  width: 17px;
+  height: 17px;
+  margin-top: 3px;
+  color: var(--glow-cyan);
+}
+
+/* ===================== 产品截图框 ===================== */
+.shot {
+  position: relative;
+  margin: 0;
+  border-radius: var(--r-xl);
+  /* 荧光渐变描边：内层深色面 padding-box，外层渐变 border-box */
+  background: linear-gradient(var(--paper-solid), var(--paper-solid)) padding-box,
+    linear-gradient(160deg, rgba(143, 210, 255, 0.55), rgba(154, 107, 255, 0.35) 55%, rgba(255, 255, 255, 0.06))
+      border-box;
+  border: 1px solid transparent;
+  box-shadow: var(--shadow-pop), 0 0 90px -30px rgba(91, 140, 255, 0.55);
+  overflow: hidden;
+}
+/* 顶部一道反射高光，让深色截图不至于和页面糊在一起 */
+.shot::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 42%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), transparent);
+  pointer-events: none;
+}
+.shot__bar {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 11px 14px;
+  background: rgba(255, 255, 255, 0.045);
+  border-bottom: 1px solid var(--line-soft);
+}
+.shot__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--line-strong);
+}
+.shot__dot:nth-child(1) { background: #e0726b; }
+.shot__dot:nth-child(2) { background: #e0b45f; }
+.shot__dot:nth-child(3) { background: #4cc28a; }
+.shot__body {
+  position: relative;
+  width: 100%;
+}
+.shot__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+/* 浮层型截图（语音球 / 快捷回复气泡 / 闪记）：无窗口条，描边更弱，靠光晕托住 */
+.shot--float {
+  border-radius: var(--r-lg);
+  background: linear-gradient(var(--paper-solid), var(--paper-solid)) padding-box,
+    linear-gradient(160deg, rgba(143, 210, 255, 0.32), rgba(154, 107, 255, 0.2)) border-box;
+}
+
+/* plain = 默认。产品截图本身多是浅色且自带窗口栏，不能再套一层红黄绿灯
+   （会变成两层 chrome），顶部那道反射高光压在白底上也只会显脏。
+   改成中性亮描边 + 一圈内阴影，让白色内容与深色页面之间有个过渡带。 */
+.shot--plain {
+  background: linear-gradient(var(--paper-solid), var(--paper-solid)) padding-box,
+    linear-gradient(160deg, rgba(255, 255, 255, 0.28), rgba(143, 210, 255, 0.18) 60%, rgba(255, 255, 255, 0.08))
+      border-box;
+}
+.shot--plain::after {
+  display: none;
+}
+.shot--plain .shot__body {
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.35);
+}
+
+/* 占位态：图还没拍，用虚线框 + 代号 + 说明撑住版位 */
+.shot__ph {
+  position: absolute;
+  inset: 10px;
+  display: grid;
+  place-content: center;
+  gap: 12px;
+  justify-items: center;
+  padding: 24px;
+  text-align: center;
+  border: 1.5px dashed rgba(143, 210, 255, 0.3);
+  border-radius: var(--r-lg);
+  background:
+    radial-gradient(70% 60% at 50% 30%, rgba(91, 140, 255, 0.1), transparent 70%),
+    repeating-linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.022) 0 10px,
+      transparent 10px 20px
+    );
+}
+.shot__ph-code {
+  padding: 4px 11px;
+  border-radius: var(--r-pill);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  background: rgba(91, 140, 255, 0.12);
+  border: 1px solid rgba(143, 210, 255, 0.22);
+}
+.shot__ph-text {
+  max-width: 34ch;
+  color: var(--ink-3);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+/* ===================== 大图叙事版式：窄文字栏 + 溢出的大图 ===================== */
+.showcase {
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  gap: clamp(30px, 4.4vw, 68px);
+  align-items: center;
+  margin-top: clamp(34px, 4.5vw, 60px);
+}
+/* 图在左、字在右（相邻区块交替，避免连排同构） */
+.showcase--flip .showcase__media {
+  order: -1;
+}
+.showcase__media {
+  position: relative;
+  min-width: 0;
+}
+.showcase__copy {
+  min-width: 0;
+}
+/* 单列大图：图压在文字下方通栏，用于最重的那两块 */
+.showcase--stack {
+  grid-template-columns: 1fr;
+}
+
+@media (max-width: 900px) {
+  .showcase {
+    grid-template-columns: 1fr;
+  }
+  .showcase--flip .showcase__media {
+    order: 0;
+  }
+  .pointlist--2 {
+    grid-template-columns: 1fr;
   }
 }
 
-/* ===================== Features 区块（由 components/sections/Features.tsx 使用）=====================
-   server 组件无法用内联 <style>，按契约把其 scoped 样式集中在此。命名前缀 .feat- 避免冲突。 */
-.feat-head {
-  max-width: var(--maxw-narrow);
-}
-.feat-head .h2 {
-  margin-top: 14px;
-  /* 中英文标题都避免末行孤字破版 */
-  text-wrap: balance;
-}
-.feat-head .lead {
-  margin-top: 14px;
-}
-/* 6 项轻卡与标题区间留白 */
-.feat-grid {
-  margin-top: clamp(32px, 4vw, 52px);
-}
-/* 卡片撑满网格行高，使同一行卡片等高（一组并列单元） */
-.feat-card {
-  height: 100%;
-}
-/* 图标底圆：小号荧光径向底 + 极淡纸面，亮/暗主题都有体积感 */
-.feat-medallion {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  border-radius: var(--r);
-  background:
-    radial-gradient(120% 120% at 30% 25%, rgba(91, 140, 255, 0.22), rgba(139, 92, 246, 0.12) 60%, transparent 78%),
-    var(--paper-sink);
-  border: 1px solid var(--line);
-  /* 图标线条随 currentColor 走荧光蓝 */
-  color: var(--glow-blue);
-}
-.feat-medallion svg {
-  width: 24px;
-  height: 24px;
-}
-.feat-title {
-  margin-top: 18px;
-}
-.feat-desc {
-  margin-top: 8px;
-}
-
-/* ===================== Automation 定时任务列表（Automation.tsx 右栏）=====================
-   设计稿深海版右栏由「用量日历」改为「定时任务」清单：表头 + 若干任务行，
-   每行左侧开关、中间名称/节奏、右侧状态徽标（运行中 / 下次 / 完成）。前缀 .task- 防冲突。 */
-.task-card {
+/* ===================== chips 条（场景入口）===================== */
+.chipset {
   display: flex;
-  flex-direction: column;
-  border-radius: var(--r-lg);
-  background: var(--paper-raise);
-  border: 1px solid var(--line);
-  box-shadow: var(--shadow-card);
-  overflow: hidden;
-}
-.task-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-wrap: wrap;
   gap: 10px;
-  padding: 14px 16px;
-  border-bottom: 1px solid var(--line);
 }
-.task-head-title {
+.chipset__chip {
   display: inline-flex;
   align-items: center;
   gap: 9px;
-  font-weight: 650;
-  font-size: 0.95rem;
-}
-.task-head-title svg {
-  width: 18px;
-  height: 18px;
-  color: var(--accent-ink);
-}
-.task-count {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  color: var(--ink-3);
-  background: var(--paper-sink);
+  padding: 9px 15px;
   border-radius: var(--r-pill);
-  padding: 2px 9px;
-}
-.task-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 13px 16px;
-}
-.task-row + .task-row {
-  border-top: 1px solid var(--line);
-}
-/* 开关（恒为开态的静态展示） */
-.task-switch {
-  flex: none;
-  width: 30px;
-  height: 17px;
-  border-radius: var(--r-pill);
-  background: var(--clay);
-  position: relative;
-}
-.task-switch::after {
-  content: "";
-  position: absolute;
-  top: 2px;
-  left: 15px;
-  width: 13px;
-  height: 13px;
-  border-radius: 50%;
-  background: #fff;
-}
-.task-main {
-  flex: 1;
-  min-width: 0;
-}
-.task-name {
-  font-size: 0.88rem;
+  background: var(--paper-raise);
+  border: 1px solid var(--line);
   color: var(--ink);
-  font-weight: 550;
+  font-size: 0.93rem;
+  font-weight: 600;
+  box-shadow: var(--shadow-xs);
 }
-.task-sched {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  color: var(--ink-3);
-  margin-top: 2px;
+.chipset__chip svg {
+  width: 17px;
+  height: 17px;
+  color: var(--jelly-top);
 }
-/* 状态徽标三态 */
-.task-status {
-  flex: none;
+
+/* ===================== tab 条（产出物 / 模型接入共用）===================== */
+.tabbar {
+  display: flex;
+  gap: 6px;
+  padding: 5px;
+  border-radius: var(--r-pill);
+  background: var(--paper-sink);
+  border: 1px solid var(--line-soft);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tabbar::-webkit-scrollbar {
+  display: none;
+}
+.tabbar__tab {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  font-size: 0.72rem;
-  font-weight: 600;
-}
-.task-status--running {
-  color: var(--glow-blue);
-}
-.task-status--running .task-pulse {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--glow-blue);
-  animation: taskPulse 2.4s var(--ease) infinite;
-}
-.task-status--done {
-  color: var(--ok);
-  background: var(--ok-soft);
+  gap: 8px;
+  padding: 9px 16px;
   border-radius: var(--r-pill);
-  padding: 3px 9px;
+  white-space: nowrap;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--ink-2);
+  transition: color 0.2s var(--ease), background 0.2s var(--ease);
 }
-.task-status--done svg {
-  width: 12px;
-  height: 12px;
+.tabbar__tab svg {
+  width: 17px;
+  height: 17px;
 }
-.task-status--next {
-  font-family: var(--font-mono);
+.tabbar__tab:hover {
+  color: var(--ink);
+}
+.tabbar__tab[aria-selected="true"] {
+  color: var(--ink);
+  background: var(--paper-raise2);
+  box-shadow: var(--shadow-xs);
+}
+
+/* ===================== bento 网格（更多能力）===================== */
+.bento {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(12px, 1.4vw, 18px);
+  margin-top: clamp(30px, 4vw, 52px);
+}
+.bento__cell {
+  padding: clamp(18px, 2vw, 24px);
+  border-radius: var(--r-lg);
+  background: var(--paper-raise);
+  border: 1px solid var(--line);
+  transition: border-color 0.3s var(--ease), background 0.3s var(--ease), transform 0.3s var(--ease);
+}
+.bento__cell:hover {
+  transform: translateY(-3px);
+  border-color: var(--line-strong);
+  background: var(--paper-raise2);
+}
+/* 前两格占双宽，打破均匀网格的呆板 */
+.bento__cell--wide {
+  grid-column: span 2;
+}
+.bento__ico {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  color: var(--jelly-top);
+  background: rgba(91, 140, 255, 0.12);
+  border: 1px solid rgba(143, 210, 255, 0.2);
+}
+.bento__ico svg {
+  width: 18px;
+  height: 18px;
+}
+.bento__title {
+  margin-top: 14px;
+  font-size: 1rem;
+  font-weight: 650;
+  letter-spacing: -0.008em;
+}
+.bento__desc {
+  margin-top: 7px;
+  color: var(--ink-2);
+  font-size: 0.9rem;
+  line-height: 1.62;
+}
+
+@media (max-width: 980px) {
+  .bento {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .bento__cell--wide {
+    grid-column: span 2;
+  }
+}
+@media (max-width: 560px) {
+  .bento {
+    grid-template-columns: 1fr;
+  }
+  .bento__cell--wide {
+    grid-column: span 1;
+  }
+}
+
+/* ===================== 强调框（不可让步的确认红线）===================== */
+.guard {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 16px;
+  align-items: start;
+  padding: clamp(18px, 2.2vw, 26px);
+  border-radius: var(--r-lg);
+  /* 内层必须不透明：半透明的 --paper-raise 会让 border-box 的陶土渐变整片透上来，
+     文字压在橙色上完全读不清。这里用带一点暖调的深色面 + 陶土描边。 */
+  background: linear-gradient(140deg, #1c1512, #14100e) padding-box,
+    linear-gradient(120deg, var(--clay), rgba(227, 121, 79, 0.25)) border-box;
+  border: 1px solid transparent;
+  box-shadow: 0 0 36px -18px rgba(227, 121, 79, 0.7);
+}
+.guard__ico {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  color: var(--clay);
+  background: var(--clay-soft);
+}
+.guard__ico svg {
+  width: 21px;
+  height: 21px;
+}
+.guard__title {
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+.guard__desc {
+  margin-top: 6px;
+  color: var(--ink-2);
+  font-size: 0.93rem;
+  line-height: 1.62;
+}
+
+/* ===================== 数字指标条 ===================== */
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(22px, 3.4vw, 52px);
+  margin-top: clamp(22px, 3vw, 34px);
+}
+.stats__value {
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 1.3rem + 2vw, 2.7rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  background: var(--grad-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.stats__label {
+  margin-top: 7px;
+  color: var(--ink-3);
+  font-size: var(--fs-sm);
+}
+
+/* ===================== Showcase 骨架（components/Showcase.tsx）===================== */
+.showcase__points {
+  margin-top: clamp(24px, 3vw, 36px);
+}
+.showcase__slot {
+  margin-top: clamp(20px, 2.6vw, 30px);
+}
+.showcase__halo {
+  top: 6%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 88%;
+  height: 70%;
+  filter: blur(44px);
+  opacity: 0.62;
+  z-index: 0;
+}
+.showcase__media .shot {
+  position: relative;
+  z-index: 1;
+}
+
+/* Squad 区块的补充说明行（圆桌 @ 调度） */
+.squad-extra {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0;
+  padding: 14px 16px;
+  border-radius: var(--r);
+  background: var(--paper-sink);
+  border: 1px solid var(--line-soft);
+  color: var(--ink-2);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+.squad-extra svg {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  margin-top: 2px;
+  color: var(--jelly-top);
+}
+
+/* =========================================================================
+   CSS 自绘示意图（components/mocks/）
+   03 时间线与 10 确认框没有可用截图，改成按产品真实结构自绘的深色示意图。
+   两者都带「示意」字样的 figcaption，不冒充真实截图。
+   ========================================================================= */
+
+/* ---------- 会话过程时间线 ---------- */
+.tlm {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  border-radius: var(--r-xl);
+  background: linear-gradient(var(--paper-solid), var(--paper-solid)) padding-box,
+    linear-gradient(160deg, rgba(143, 210, 255, 0.5), rgba(154, 107, 255, 0.3) 55%, rgba(255, 255, 255, 0.06))
+      border-box;
+  border: 1px solid transparent;
+  box-shadow: var(--shadow-pop), 0 0 90px -30px rgba(91, 140, 255, 0.5);
+  overflow: hidden;
+}
+.tlm__bar {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 11px 14px;
+  background: rgba(255, 255, 255, 0.045);
+  border-bottom: 1px solid var(--line-soft);
+}
+.tlm__body {
+  padding: clamp(18px, 2.2vw, 26px);
+}
+.tlm__summary {
+  margin: 0 0 18px;
+  color: var(--ink-2);
+  font-size: 0.88rem;
+}
+.tlm__steps {
+  position: relative;
+  margin: 0;
+  padding: 0 0 0 4px;
+  list-style: none;
+}
+/* 竖轴：贯穿所有步骤节点的中心线 */
+.tlm__steps::before {
+  content: "";
+  position: absolute;
+  left: 15px;
+  top: 12px;
+  bottom: 12px;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, var(--line-strong) 12%, var(--line-strong) 88%, transparent);
+}
+.tlm__step {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  padding: 6px 0;
+}
+.tlm__node {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 23px;
+  height: 23px;
+  border-radius: 50%;
+  background: #0d1119;
+  border: 1px solid var(--line-strong);
   color: var(--ink-3);
 }
-@keyframes taskPulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(91, 140, 255, 0); }
-  50% { box-shadow: 0 0 0 5px rgba(91, 140, 255, 0.16); }
+.tlm__node svg { width: 12px; height: 12px; }
+.tlm__step--think .tlm__node { color: var(--jelly-top); border-color: rgba(143, 210, 255, 0.45); }
+.tlm__step--delegate .tlm__node { color: var(--glow-violet); border-color: rgba(139, 92, 246, 0.5); }
+.tlm__step--tool .tlm__node { color: var(--ok); border-color: rgba(76, 194, 138, 0.4); }
+
+/* 步骤行本体：工具是胶囊，思考是无框文本，子代理是紫调卡 */
+.tlm__row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: baseline;
+  min-width: 0;
+  padding: 8px 12px;
+  border-radius: var(--r-sm);
+  background: var(--paper-sink);
+  border: 1px solid var(--line-soft);
+  font-size: 0.82rem;
 }
-@media (prefers-reduced-motion: reduce) {
-  .task-status--running .task-pulse {
-    animation: none;
-  }
+.tlm__step--think .tlm__row {
+  background: none;
+  border-color: transparent;
+  padding-inline: 0;
+}
+.tlm__step--delegate .tlm__row {
+  background: rgba(139, 92, 246, 0.1);
+  border-color: rgba(139, 92, 246, 0.28);
+}
+.tlm__name { color: var(--ink); font-weight: 600; white-space: nowrap; }
+.tlm__step--think .tlm__name { color: var(--jelly-top); }
+.tlm__detail {
+  min-width: 0;
+  color: var(--ink-3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tlm__meta { color: var(--ink-3); font-size: 0.74rem; white-space: nowrap; }
+.tlm__more {
+  margin: 16px 0 0;
+  padding-left: 35px;
+  color: var(--accent-ink);
+  font-size: 0.84rem;
+}
+.tlm__cap,
+.cfm__cap {
+  padding: 10px 14px 12px;
+  text-align: center;
+  color: var(--ink-3);
+  font-size: 0.76rem;
+}
+
+/* ---------- 电脑操作确认框 ---------- */
+.cfm {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+}
+.cfm__card {
+  max-width: 460px;
+  margin-inline: auto;
+  padding: clamp(20px, 2.4vw, 28px);
+  border-radius: var(--r-xl);
+  /* 内层不透明（半透明会让描边渐变透上来，文字读不清） */
+  background: linear-gradient(150deg, #171b25, #0f131b) padding-box,
+    linear-gradient(140deg, rgba(227, 121, 79, 0.7), rgba(143, 210, 255, 0.25)) border-box;
+  border: 1px solid transparent;
+  box-shadow: var(--shadow-pop), 0 0 70px -24px rgba(227, 121, 79, 0.55);
+}
+.cfm__head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+}
+.cfm__ico {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  color: var(--clay);
+  background: var(--clay-soft);
+}
+.cfm__ico svg { width: 21px; height: 21px; }
+.cfm__badge {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: var(--r-pill);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--clay);
+  background: var(--clay-soft);
+}
+.cfm__title {
+  margin-top: 9px;
+  font-size: 1.04rem;
+  font-weight: 650;
+  line-height: 1.4;
+}
+.cfm__rows {
+  margin: 20px 0 0;
+  padding: 14px 16px;
+  border-radius: var(--r);
+  background: var(--paper-sink);
+  border: 1px solid var(--line-soft);
+}
+.cfm__row {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  gap: 12px;
+  padding: 5px 0;
+  font-size: 0.85rem;
+}
+.cfm__row dt { color: var(--ink-3); }
+.cfm__row dd { margin: 0; color: var(--ink); }
+.cfm__note {
+  margin: 14px 0 0;
+  color: var(--ink-2);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+.cfm__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+/* 纯展示，不是真按钮：用 span + 按钮样式，不给可点击的错觉（无 hover / 无 cursor） */
+.cfm__btn {
+  padding: 9px 20px;
+  border-radius: var(--r-pill);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.cfm__btn--deny {
+  color: var(--ink-2);
+  background: var(--paper-raise);
+  border: 1px solid var(--line-strong);
+}
+.cfm__btn--allow {
+  color: var(--clay-ink);
+  background: var(--clay);
+  box-shadow: 0 10px 22px -12px rgba(201, 100, 66, 0.7);
 }
