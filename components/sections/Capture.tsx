@@ -96,7 +96,9 @@ export default function Capture({ d }: { d: Dict; locale: Locale }) {
         }
 
         .cap-media { position: relative; }
-        .cap-media__aside {
+        /* 保持比 .showcase__media .shot 更高的优先级，避免通用 relative
+           规则破坏两张图的叠放关系。 */
+        .showcase__media.cap-media .cap-media__aside {
           position: absolute;
           z-index: 2;
           left: -6%;
@@ -107,8 +109,11 @@ export default function Capture({ d }: { d: Dict; locale: Locale }) {
         #capture { padding-bottom: clamp(90px, 12vw, 170px); }
 
         @media (max-width: 900px) {
-          .cap-media__aside {
+          /* 窄屏按上下顺序排列，副图不再携带桌面端的偏移。 */
+          .showcase__media.cap-media .cap-media__aside {
             position: static;
+            inset: auto;
+            z-index: auto;
             width: 100%;
             margin-top: 18px;
           }
