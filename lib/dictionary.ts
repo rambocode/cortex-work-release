@@ -60,6 +60,19 @@ export type IconKey =
   | "shield"
   | "folder";
 
+/** 联系作者卡片：kind 决定用哪个平台 logo 与哪种头像。 */
+export interface ContactCard {
+  kind: "x" | "github";
+  /** 主标题：X 上是人名，GitHub 上是 owner/repo */
+  name: string;
+  /** 副标题：@handle 或平台名 */
+  handle: string;
+  /** 右上角行动 pill 的文案 */
+  action: string;
+  desc: string;
+  href: string;
+}
+
 /** 标题 + 一句说明的要点条目（Voice / Workspace / Squad / Hands / Automation 共用）。 */
 export interface Point {
   icon: IconKey;
@@ -243,6 +256,14 @@ export interface Dict {
     changelog: string;
     note: string;
     requirement: string;
+    /** 下载数 / 在用人数的标签；数字本身由 lib/counters.ts 算出 */
+    counters: { downloads: string; users: string };
+  };
+  contact: {
+    eyebrow: string;
+    title: string;
+    sub: string;
+    cards: ContactCard[];
   };
   footer: {
     tagline: string;
@@ -264,6 +285,10 @@ export interface Dict {
 
 // 发布与源码统一指向公开的 release 仓库（下载、发布版本、查看 GitHub 全部跟随）。
 const GITHUB = "https://github.com/rambocode/cortex-work-release";
+
+// 作者的 X 主页，以及提问 / 报 bug 的 Issues 入口（Contact 区块两张卡片）。
+const X_URL = "https://x.com/daveylan2";
+const ISSUES = `${GITHUB}/issues`;
 
 const zh: Dict = {
   meta: {
@@ -795,6 +820,31 @@ const zh: Dict = {
     changelog: "看更新日志",
     note: "macOS · 支持应用内自动更新",
     requirement: "需要自备模型供应商：已有订阅可直接登录，也可以填 API Key。",
+    counters: { downloads: "累计下载", users: "在用的人" },
+  },
+
+  contact: {
+    eyebrow: "找作者",
+    title: "有问题？直接找我",
+    sub: "一个人做的产品，没有客服工单系统。用着别扭、少个功能、崩了，说一声就行。",
+    cards: [
+      {
+        kind: "x",
+        name: "Davey",
+        handle: "@daveylan2",
+        action: "私信我",
+        desc: "Cortex Desktop 的作者。产品进展、新版本和日常都在这里更新，私信一直开着。",
+        href: X_URL,
+      },
+      {
+        kind: "github",
+        name: "cortex-work-release",
+        handle: "GitHub Issues",
+        action: "提 Issue",
+        desc: "Bug、功能建议、装不上跑不通，都发到 Issues。公开可见，我逐条看、逐条回。",
+        href: ISSUES,
+      },
+    ],
   },
 
   footer: {
@@ -824,8 +874,10 @@ const zh: Dict = {
         title: "资源",
         links: [
           { label: "下载", href: "#download" },
+          { label: "找作者", href: "#contact" },
           { label: "GitHub", href: GITHUB },
           { label: "发布版本", href: `${GITHUB}/releases` },
+          { label: "反馈问题", href: ISSUES },
         ],
       },
     ],
@@ -1375,6 +1427,31 @@ const en: Dict = {
     note: "macOS · in-app auto-updates",
     requirement:
       "Bring your own model provider: sign in with an existing subscription, or paste an API key.",
+    counters: { downloads: "Downloads", users: "People using it" },
+  },
+
+  contact: {
+    eyebrow: "Reach the author",
+    title: "Something wrong? Come find me",
+    sub: "A one-person product — no support ticket queue. If it feels off, misses a feature, or breaks, just say so.",
+    cards: [
+      {
+        kind: "x",
+        name: "Davey",
+        handle: "@daveylan2",
+        action: "Send a DM",
+        desc: "The author of Cortex Desktop. Progress, new releases and day-to-day notes land here; DMs stay open.",
+        href: X_URL,
+      },
+      {
+        kind: "github",
+        name: "cortex-work-release",
+        handle: "GitHub Issues",
+        action: "Open an issue",
+        desc: "Bugs, feature requests, install problems — all go to Issues. Public, and I read and answer every one.",
+        href: ISSUES,
+      },
+    ],
   },
 
   footer: {
@@ -1404,8 +1481,10 @@ const en: Dict = {
         title: "Resources",
         links: [
           { label: "Download", href: "#download" },
+          { label: "Reach the author", href: "#contact" },
           { label: "GitHub", href: GITHUB },
           { label: "Releases", href: `${GITHUB}/releases` },
+          { label: "Report an issue", href: ISSUES },
         ],
       },
     ],

@@ -15,6 +15,7 @@ import Models from "@/components/sections/Models";
 import Features from "@/components/sections/Features";
 import Privacy from "@/components/sections/Privacy";
 import Download from "@/components/sections/Download";
+import Contact from "@/components/sections/Contact";
 import Footer from "@/components/sections/Footer";
 import { Reveal } from "@/components/ui";
 
@@ -25,10 +26,10 @@ import { Reveal } from "@/components/ui";
    → Voice 语音（最新最重的差异化）→ Workspace 过程可见
    → Deliverables 产出成品 → Squad 子代理编队 → Hands 动手（含确认红线）
    → Automation 无人值守 → Capture 随手接住 → Models 自带模型
-   → Features 其余能力 → Privacy 本地优先 → Download。
+   → Features 其余能力 → Privacy 本地优先 → Download → Contact 找作者。
    - Hero 首屏直接显示；其余区块用 <Reveal> 进入视口揭示。
    - 锚点 id 全站唯一：scenes / voice / workspace / make / squad / hands /
-     automation / capture / models / features / download。
+     automation / capture / models / features / download / contact。
    ========================================================================= */
 export default async function LandingPage({
   params,
@@ -81,6 +82,9 @@ export default async function LandingPage({
         </Reveal>
         <Reveal>
           <Download d={d} locale={loc} />
+        </Reveal>
+        <Reveal>
+          <Contact d={d} locale={loc} />
         </Reveal>
       </main>
       <Footer d={d} locale={loc} />

@@ -6,12 +6,18 @@
    server 组件：无 hooks、不读浏览器 API。
    ========================================================================= */
 
+import Counters from "@/components/Counters";
 import { IconArrowRight, IconDownload } from "@/components/icons";
 import { Reveal } from "@/components/ui";
+import { countersAt } from "@/lib/counters";
 import type { Dict } from "@/lib/dictionary";
 import type { Locale } from "@/lib/i18n";
 
 export default function Download({ d }: { d: Dict; locale: Locale }) {
+  // 构建期基线：server 组件只在 next build 时跑一次，这个值会被写死进导出的
+  // HTML，供 SSR 首帧与无 JS 环境使用；挂载后 Counters 会按当前时间重算。
+  const baseline = countersAt(Date.now());
+
   return (
     <section id="download" className="section dl">
       <div className="container container-narrow">
@@ -27,6 +33,15 @@ export default function Download({ d }: { d: Dict; locale: Locale }) {
               </h2>
 
               <p className="lead dl__sub">{d.download.sub}</p>
+
+              {/* 社会证明放在下载按钮之前：先看到有多少人在用，再决定点不点 */}
+              <div className="dl__counters">
+                <Counters
+                  baseline={baseline}
+                  downloadsLabel={d.download.counters.downloads}
+                  usersLabel={d.download.counters.users}
+                />
+              </div>
 
               <div className="dl__arches">
                 {d.download.arches.map((a) => (
@@ -90,6 +105,13 @@ export default function Download({ d }: { d: Dict; locale: Locale }) {
         }
         .dl__title { text-wrap: balance; max-width: 20ch; }
         .dl__sub { text-wrap: balance; max-width: 44ch; }
+
+        /* 数字条在居中卡片里要自己居中：.stats 默认左对齐、上边距也偏大 */
+        .dl__counters .stats {
+          justify-content: center;
+          margin-top: 6px;
+        }
+        .dl__counters .stats__label { text-align: center; }
 
         .dl__arches {
           display: flex;

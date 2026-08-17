@@ -6,13 +6,13 @@
      浏览器按文档顺序解析首个同 id 定义，视觉一致、安全。
    ========================================================================= */
 
-/** 单一发光水母小标（约 24px），渐变与色值同 app/icon.svg。 */
-function JellyMark({ className }: { className?: string }) {
+/** 单一发光水母小标（默认 24px，可放大后当头像用），渐变与色值同 app/icon.svg。 */
+export function JellyMark({ className, size = 24 }: { className?: string; size?: number }) {
   return (
     <svg
       className={className}
-      width="24"
-      height="24"
+      width={size}
+      height={size}
       viewBox="0 0 32 32"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

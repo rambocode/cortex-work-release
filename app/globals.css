@@ -1214,3 +1214,114 @@ button {
   background: var(--clay);
   box-shadow: 0 10px 22px -12px rgba(201, 100, 66, 0.7);
 }
+
+/* ===================== 找作者卡片（components/sections/Contact.tsx）=====================
+   Contact 是 server 组件，不能写内联 <style>，样式收在这里。 */
+.ct__grid {
+  margin-top: clamp(24px, 3vw, 36px);
+}
+/* 整张卡片是一个外链 <a>，取消默认下划线并让内部按块排版 */
+.ct__card {
+  display: block;
+  color: inherit;
+}
+.ct__head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.ct__avatar {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: var(--r-pill);
+}
+/* X 卡片代表「人」：荧光渐变底 + 名字首字母。深底字保证对比度 */
+.ct__avatar--x {
+  background: var(--grad-jelly);
+  color: #0a0d15;
+  font-family: var(--font-display);
+  font-weight: 650;
+  font-size: 1.3rem;
+  line-height: 1;
+}
+/* GitHub 卡片代表「项目」：低调抬升面 + 品牌水母标 */
+.ct__avatar--github {
+  background: var(--paper-raise2);
+  border: 1px solid var(--line);
+}
+.ct__who {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0; /* 允许长仓库名在窄屏被截断，而不是把 pill 挤出卡片 */
+}
+.ct__name {
+  font-weight: 650;
+  font-size: 1.02rem;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ct__handle {
+  color: var(--ink-3);
+  font-size: var(--fs-sm);
+}
+.ct__action {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.ct__logo {
+  width: 19px;
+  height: 19px;
+  color: var(--ink-2);
+  transition: color 0.25s var(--ease);
+}
+/* pill 必须整体不折行：中文两字的行动词一旦换行，胶囊会变成两行的高块 */
+.ct__pill {
+  white-space: nowrap;
+}
+.ct__pill svg {
+  width: 14px;
+  height: 14px;
+  transition: transform 0.25s var(--ease);
+}
+.ct__card:hover .ct__logo {
+  color: var(--ink);
+}
+.ct__card:hover .ct__pill {
+  background: var(--paper-raise2);
+  border-color: var(--line-strong);
+  color: var(--ink);
+}
+.ct__card:hover .ct__pill svg {
+  transform: translateX(2px);
+}
+.ct__desc {
+  margin-top: 15px;
+  color: var(--ink-2);
+  font-size: 0.95rem;
+  line-height: 1.68;
+}
+
+/* 窄屏：pill 挤不下，让它整体掉到第二行并左对齐头像 */
+@media (max-width: 520px) {
+  .ct__head {
+    flex-wrap: wrap;
+  }
+  .ct__action {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+/* 下载数 / 在用人数（components/Counters.tsx）：
+   等宽数字，避免 count-up 滚动时字宽变化导致标签左右抖动 */
+.ct-stats .stats__value {
+  font-variant-numeric: tabular-nums;
+}
