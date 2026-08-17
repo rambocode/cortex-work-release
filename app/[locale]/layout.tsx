@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import "../globals.css";
 import { locales, isLocale, type Locale } from "@/lib/i18n";
 import { getDict } from "@/lib/dictionary";
+import Analytics from "@/components/Analytics";
 
 // 站点地址（占位：部署时用 NEXT_PUBLIC_SITE_URL 覆盖为真实域名）。
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://cortex-desktop.app";
@@ -60,6 +61,7 @@ export default async function LocaleLayout({
           {d.a11y.skipToContent}
         </a>
         {children}
+        <Analytics />
       </body>
     </html>
   );
