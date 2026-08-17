@@ -5,12 +5,14 @@
    平台 logo + 行动 pill；下方一段说明。
    server 组件：无 hooks、不读浏览器 API。
 
-   想换成真实头像：把图片放进 public/，用 lib/asset.ts 的 asset() 拼路径后
-   替换 .ct__avatar 里的内容（手写 <img src="/x.png"> 在子路径部署下必然 404）。
+   换头像：把图片放进 public/，在 dictionary 的卡片上填 avatar 路径即可；
+   路径必须经 asset() 拼 basePath，手写 <img src="/x.webp"> 在子路径部署下
+   必然 404（见 lib/asset.ts）。
    ========================================================================= */
 
 import { JellyMark } from "@/components/brand";
 import { IconArrowRight, IconGithub, IconX } from "@/components/icons";
+import { asset } from "@/lib/asset";
 import type { Dict } from "@/lib/dictionary";
 import type { Locale } from "@/lib/i18n";
 
@@ -38,9 +40,20 @@ export default function Contact({ d }: { d: Dict; locale: Locale }) {
                 rel="noreferrer"
               >
                 <div className="ct__head">
-                  <span className={`ct__avatar ct__avatar--${c.kind}`} aria-hidden>
-                    {/* X 卡片是「人」，用名字首字母；GitHub 卡片是「项目」，用品牌水母标 */}
-                    {c.kind === "x" ? c.name.slice(0, 1) : <JellyMark size={26} />}
+                  <span
+                    className={`ct__avatar ct__avatar--${c.kind}${c.avatar ? " ct__avatar--img" : ""}`}
+                    aria-hidden
+                  >
+                    {/* 有头像图就用图；没有则回退——X 卡片用名字首字母，GitHub 卡片用品牌水母标 */}
+                    {c.avatar ? (
+                      // eslint-disable-next-line @next/next/no-img-element -- 静态导出关闭了图片优化，用原生 img 更直接
+                      <img src={asset(c.avatar)} alt="" width={46} height={46} loading="lazy" />
+                    ) : c.kind === "x" ? (
+                      // name 可能是 "@handle" 形式，取首字母前先剥掉 @
+                      c.name.replace(/^@/, "").slice(0, 1).toUpperCase()
+                    ) : (
+                      <JellyMark size={26} />
+                    )}
                   </span>
 
                   <span className="ct__who">

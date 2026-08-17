@@ -65,12 +65,14 @@ export interface ContactCard {
   kind: "x" | "github";
   /** 主标题：X 上是人名，GitHub 上是 owner/repo */
   name: string;
-  /** 副标题：@handle 或平台名 */
+  /** 副标题：平台名 */
   handle: string;
   /** 右上角行动 pill 的文案 */
   action: string;
   desc: string;
   href: string;
+  /** 头像图片在 public/ 下的路径；不填则回退到首字母 / 品牌水母标 */
+  avatar?: string;
 }
 
 /** 标题 + 一句说明的要点条目（Voice / Workspace / Squad / Hands / Automation 共用）。 */
@@ -830,11 +832,12 @@ const zh: Dict = {
     cards: [
       {
         kind: "x",
-        name: "Davey",
-        handle: "@daveylan2",
+        name: "@daveylan2",
+        handle: "X",
         action: "私信我",
         desc: "Cortex Desktop 的作者。产品进展、新版本和日常都在这里更新，私信一直开着。",
         href: X_URL,
+        avatar: "/avatar.webp",
       },
       {
         kind: "github",
@@ -1437,11 +1440,12 @@ const en: Dict = {
     cards: [
       {
         kind: "x",
-        name: "Davey",
-        handle: "@daveylan2",
+        name: "@daveylan2",
+        handle: "X",
         action: "Send a DM",
         desc: "The author of Cortex Desktop. Progress, new releases and day-to-day notes land here; DMs stay open.",
         href: X_URL,
+        avatar: "/avatar.webp",
       },
       {
         kind: "github",
