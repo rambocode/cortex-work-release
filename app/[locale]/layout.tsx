@@ -3,10 +3,8 @@ import { notFound } from "next/navigation";
 import "../globals.css";
 import { locales, isLocale, type Locale } from "@/lib/i18n";
 import { getDict } from "@/lib/dictionary";
+import { siteUrl } from "@/lib/site";
 import Analytics from "@/components/Analytics";
-
-// 站点地址（占位：部署时用 NEXT_PUBLIC_SITE_URL 覆盖为真实域名）。
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://cortex-desktop.app";
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -23,7 +21,7 @@ export async function generateMetadata({
   const loc: Locale = isLocale(locale) ? locale : "zh";
   const d = getDict(loc);
   return {
-    metadataBase: new URL(SITE_URL),
+    metadataBase: new URL(siteUrl),
     title: d.meta.title,
     description: d.meta.description,
     alternates: {
