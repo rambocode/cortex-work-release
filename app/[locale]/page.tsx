@@ -17,6 +17,7 @@ import Privacy from "@/components/sections/Privacy";
 import Download from "@/components/sections/Download";
 import Contact from "@/components/sections/Contact";
 import Footer from "@/components/sections/Footer";
+import ProductJsonLd from "@/components/ProductJsonLd";
 import { Reveal } from "@/components/ui";
 
 /* =========================================================================
@@ -42,6 +43,8 @@ export default async function LandingPage({
 
   return (
     <>
+      {/* 为搜索引擎提供与当前语言页面一致的软件产品信息，不影响可见页面布局。 */}
+      <ProductJsonLd d={d} locale={loc} />
       <Nav d={d} locale={loc} />
       <main id="main">
         {/* 首屏直接显示，自身已做错峰入场，无需再包 Reveal */}
