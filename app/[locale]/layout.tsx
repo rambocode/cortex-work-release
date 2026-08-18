@@ -24,6 +24,9 @@ export async function generateMetadata({
     metadataBase: new URL(siteUrl),
     title: d.meta.title,
     description: d.meta.description,
+    // Google Search Console 所有权验证。由 Next 静态写入每个语言页的 <head>，
+    // 保持后续 sitemap 提交与自然搜索数据可用，不能在验证后删除。
+    verification: { google: "qwoHI-_haeIxrkZeszkKSYADrjLgDfNb1mgnrd62m28" },
     alternates: {
       canonical: `/${loc}`,
       languages: { zh: "/zh", en: "/en", "x-default": "/zh" },
